@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/activity_join"
     android:layout_width="match_parent"
@@ -23,10 +24,23 @@
         android:textAlignment="center"
         android:textAllCaps="true"
         android:layout_height="100dp"
-        android:inputType="textPersonName"
+        android:inputType="textCapCharacters"
+        android:maxLength="4"
         android:ems="10"
-        android:id="@+id/editText"
+        android:id="@+id/joinCode"
         android:hint="Code"
         android:layout_alignParentTop="true"
         android:layout_marginTop="33dp" />
+
+    <Button
+        android:text="exit"
+        android:layout_width="100dp"
+        android:textAppearance="@style/TextAppearance.AppCompat.Display2"
+        android:layout_height="wrap_content"
+        android:id="@+id/exitButton"
+        style="@style/MenuButton"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="48dp" />
+
 </RelativeLayout>
