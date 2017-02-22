@@ -11,12 +11,42 @@
     tools:context="com.base512.ordo.LobbyActivity">
 
     <TextView
-        android:text="HELLO."
+        android:text="Create Game"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true"
-        android:layout_marginTop="195dp"
-        android:id="@+id/textView3"
-        android:textAppearance="@style/TextAppearance.AppCompat.Body2" />
+        android:layout_marginTop="17dp"
+        android:id="@+id/CreateGameText" />
+
+    <TextView
+        android:textAppearance="@style/TextAppearance.AppCompat.Display3"
+        android:textAllCaps="true"
+        android:layout_height="100dp"
+        android:layout_width="wrap_content"
+        android:maxLength="4"
+        android:layout_below="@+id/CreateGameText"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="53dp"
+        android:id="@+id/generatedGameCode" />
+
+    <TextView
+        android:text="game code"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBottom="@+id/generatedGameCode"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="13dp"
+        android:id="@+id/gameCodeInform" />
+
+    <Button
+        android:text="start"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        style="@style/MenuButton"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="43dp"
+        android:id="@+id/startGameButton" />
+
 </RelativeLayout>
