@@ -8,6 +8,8 @@ import android.util.DisplayMetrics;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.base512.ordo.data.source.DataModel;
+
 public class GameStudyActivity extends AppCompatActivity {
 
     // Game object container layout
@@ -27,6 +29,8 @@ public class GameStudyActivity extends AppCompatActivity {
     public void setupViews() {
         mContainerLayout = (FlexboxLayout) findViewById(R.id.study_row_container);
         mCreatorLabel = (TextView) findViewById(R.id.creatorLabel);
+
+        mCreatorLabel.setText(DataModel.getDataModel().getUser().getId());
     }
 
     public void displayRows() {
