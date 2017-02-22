@@ -1,8 +1,11 @@
-package com.base512.ordo.data;
+package com.base512.ordo.data.source;
 
 import android.content.Context;
 
-import com.base512.ordo.data.source.BaseDataSource;
+import com.base512.ordo.data.GameObject;
+import com.base512.ordo.data.User;
+import com.base512.ordo.data.source.game.GameModel;
+import com.base512.ordo.data.source.gameObject.GameObjectModel;
 import com.base512.ordo.data.source.user.UserModel;
 
 public class DataModel {
@@ -12,8 +15,14 @@ public class DataModel {
 
     private Context mContext;
 
-    /** The model from which user data are fetched **/
+    // The model from which user data are fetched
     private UserModel mUserModel;
+
+    // The model from which game object are fetched
+    private GameObjectModel mGameObjectModel;
+
+    // The model from which game data are fetched
+    private GameModel mGameModel;
 
     public static DataModel getDataModel() {
         return sDataModel;
@@ -28,6 +37,8 @@ public class DataModel {
         mContext = context.getApplicationContext();
 
         mUserModel = new UserModel(mContext);
+        mGameObjectModel = new GameObjectModel(mContext);
+        mGameModel = new GameModel(mContext);
     }
 
     public User getUser() {
@@ -52,6 +63,10 @@ public class DataModel {
 
     public void setGamesPlayed(int gamesPlayed) {
         mUserModel.saveUser(getUser().withGamesPlayed(gamesPlayed));
+    }
+
+    public void getGameObject(String id, BaseDataSource.GetDataCallback<GameObject> gameObjectDataCallback) {
+        mGameObjectModel.getGameObject(id, gameObjectDataCallback);
     }
 
 }

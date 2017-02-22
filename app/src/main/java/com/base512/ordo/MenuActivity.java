@@ -6,7 +6,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.Button;
 
-import com.base512.ordo.data.DataModel;
+import com.base512.ordo.data.source.DataModel;
 
 public class MenuActivity extends AppCompatActivity {
 
