@@ -13,7 +13,6 @@ public class GameLobbyActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        getSupportActionBar().hide();
         setContentView(R.layout.activity_lobby);
         setupViews();
     }
@@ -30,7 +29,7 @@ public class GameLobbyActivity extends AppCompatActivity {
     }
 
     private void sendToGame() {
-        Intent intent = new Intent(this, GameActivity.class);
+        Intent intent = new Intent(this, GameStudyActivity.class);
         startActivity(intent);
     }
 
