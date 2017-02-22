@@ -8,7 +8,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 
-public class CreateActivity extends AppCompatActivity {
+public class GameCreateActivity extends AppCompatActivity {
 
     private ImageView mAddToNumber;
 
@@ -76,7 +76,7 @@ public class CreateActivity extends AppCompatActivity {
     }
 
     private void sendToLobby() {
-        Intent intent = new Intent(this, LobbyActivity.class);
+        Intent intent = new Intent(this, GameLobbyActivity.class);
         startActivity(intent);
     }
 

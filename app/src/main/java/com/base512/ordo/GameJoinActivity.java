@@ -7,7 +7,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 
-public class JoinActivity extends AppCompatActivity {
+public class GameJoinActivity extends AppCompatActivity {
 
     private Button mExitButton;
 

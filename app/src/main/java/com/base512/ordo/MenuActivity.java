@@ -53,12 +53,12 @@ public class MenuActivity extends AppCompatActivity {
     }
 
     private void newGame() {
-        Intent intent = new Intent(this, CreateActivity.class);
+        Intent intent = new Intent(this, GameCreateActivity.class);
         startActivity(intent);
     }
 
     private void joinGame() {
-        Intent intent = new Intent(this, JoinActivity.class);
+        Intent intent = new Intent(this, GameJoinActivity.class);
         startActivity(intent);
     }
 }

@@ -3,7 +3,7 @@ package com.base512.ordo;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 
-public class LobbyActivity extends AppCompatActivity {
+public class GameLobbyActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
