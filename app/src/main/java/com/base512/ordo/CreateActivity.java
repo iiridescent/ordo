@@ -57,7 +57,7 @@ public class CreateActivity extends AppCompatActivity {
         });
     }
 
-    private void addToNumber() {
+    public void addToNumber() {
 
         String getFromNumberBox = mNumberBox.getText().toString();
 
