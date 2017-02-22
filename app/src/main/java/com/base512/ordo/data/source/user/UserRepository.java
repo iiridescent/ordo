@@ -1,4 +1,4 @@
-package com.base512.ordo.data.source;
+package com.base512.ordo.data.source.user;
 
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -13,6 +13,7 @@ import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
 
 import com.base512.ordo.data.User;
+import com.base512.ordo.data.source.BaseDataSource;
 
 /**
  * Created by Thomas on 2/21/2017.
@@ -75,12 +76,16 @@ final class UserRepository implements UserDataSource {
         query.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-                User user = new User(
-                        dataSnapshot.child(keyCode).getValue(String.class),
-                        dataSnapshot.child(HIGH_SCORE).getValue(Integer.class),
-                        dataSnapshot.child(GAMES_PLAYED).getValue(Integer.class));
+                if(dataSnapshot.exists() && dataSnapshot.getKey().equals(keyCode)) {
+                    User user = new User(
+                            keyCode,
+                            dataSnapshot.child(HIGH_SCORE).getValue(Integer.class),
+                            dataSnapshot.child(GAMES_PLAYED).getValue(Integer.class));
 
-                getUserCallback.onDataLoaded(user);
+                    getUserCallback.onDataLoaded(user);
+                } else {
+                    getUserCallback.onDataError();
+                }
             }
 
             @Override

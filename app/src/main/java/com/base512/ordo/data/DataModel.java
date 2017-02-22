@@ -2,7 +2,8 @@ package com.base512.ordo.data;
 
 import android.content.Context;
 
-import com.base512.ordo.data.source.UserModel;
+import com.base512.ordo.data.source.BaseDataSource;
+import com.base512.ordo.data.source.user.UserModel;
 
 public class DataModel {
 
@@ -39,6 +40,10 @@ public class DataModel {
 
     public void setUser(User user) {
         mUserModel.saveUser(user);
+    }
+
+    public void attemptLogin(String keyCode, BaseDataSource.GetDataCallback<User> userDataCallback) {
+        mUserModel.getUser(keyCode, userDataCallback);
     }
 
     public void setHighScore(int highScore) {

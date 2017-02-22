@@ -1,9 +1,10 @@
-package com.base512.ordo.data.source;
+package com.base512.ordo.data.source.user;
 
 import android.content.Context;
 import android.support.annotation.NonNull;
 
 import com.base512.ordo.data.User;
+import com.base512.ordo.data.source.BaseDataSource;
 
 public interface UserDataSource {
     User getSavedUser(Context context);
