@@ -36,4 +36,22 @@
                 android:layout_below="@+id/creatorLabel"/>
     </android.support.v4.widget.NestedScrollView>-->
 
+    <TextView
+        android:text="HERE"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="13dp"
+        android:id="@+id/textView4" />
+
+    <LinearLayout
+        android:id="@+id/study_row_container"
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@+id/textView4"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="13dp"/>
+
 </RelativeLayout>
