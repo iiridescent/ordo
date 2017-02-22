@@ -6,14 +6,13 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 
-public class LobbyActivity extends AppCompatActivity {
+public class GameLobbyActivity extends AppCompatActivity {
 
     private Button mStartButton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        getSupportActionBar().hide();
         setContentView(R.layout.activity_lobby);
         setupViews();
     }
@@ -30,7 +29,7 @@ public class LobbyActivity extends AppCompatActivity {
     }
 
     private void sendToGame() {
-        Intent intent = new Intent(this, GameActivity.class);
+        Intent intent = new Intent(this, GameStudyActivity.class);
         startActivity(intent);
     }
 

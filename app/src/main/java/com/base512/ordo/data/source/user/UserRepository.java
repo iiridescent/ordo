@@ -25,12 +25,10 @@ final class UserRepository implements UserDataSource {
     private static final String GAMES_PLAYED = "gamesPlayed";
     private static final String HIGH_SCORE = "highScore";
 
-    // Key to user objects in shared preferences
+    // Key to saved user object in shared preferences
     private static final String USER_ID = "user_id";
     private static final String USER_HIGH_SCORE = "user_high_score";
     private static final String USER_GAMES_PLAYED = "user_games_played";
-
-
 
     private static SharedPreferences sPrefs;
 

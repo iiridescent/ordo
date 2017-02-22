@@ -7,6 +7,14 @@ import java.util.ArrayList;
  */
 
 public class Game extends DataObject {
+    public class Config {
+        public final int mNumberOfObjects;
+
+        public Config(int numberOfObjects) {
+            mNumberOfObjects = numberOfObjects;
+        }
+    }
+
     public enum State { WAITING, STUDY, TEST, FINISHED }
 
     private final State mState;

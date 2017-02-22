@@ -11,11 +11,13 @@ import com.base512.ordo.data.source.BaseDataSource;
  */
 
 public interface GameDataSource {
-    Game getCurrentGame(@NonNull Context context);
+    void getCurrentGame(@NonNull Context context, BaseDataSource.GetDataCallback<Game> gameDataCallback);
 
     void setCurrentGame(@NonNull Game game, @NonNull Context context);
 
     void getGame(@NonNull String gameId, BaseDataSource.GetDataCallback<Game> gameDataCallback);
 
     void setGameState(@NonNull String gameId, @NonNull Game.State state, @NonNull Context context, @NonNull BaseDataSource.UpdateDataCallback updateGameCallback);
+
+    void createGame(@NonNull Game.Config config, @NonNull Context context, BaseDataSource.GetDataCallback<Game> gameDataCallback);
 }
