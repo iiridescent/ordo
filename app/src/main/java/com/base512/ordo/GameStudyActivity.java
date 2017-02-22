@@ -1,16 +1,17 @@
 package com.base512.ordo;
 
+import com.google.android.flexbox.FlexboxLayout;
+
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
-import android.view.LayoutInflater;
+import android.util.DisplayMetrics;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 
 public class GameStudyActivity extends AppCompatActivity {
 
     // Game object container layout
-    private LinearLayout mContainerLayout;
+    private FlexboxLayout mContainerLayout;
 
     // This label shows the keyCode of the game creator
     private TextView mCreatorLabel;
@@ -24,39 +25,35 @@ public class GameStudyActivity extends AppCompatActivity {
     }
 
     public void setupViews() {
-        mContainerLayout = (LinearLayout) findViewById(R.id.study_row_container);
+        mContainerLayout = (FlexboxLayout) findViewById(R.id.study_row_container);
         mCreatorLabel = (TextView) findViewById(R.id.creatorLabel);
     }
 
     public void displayRows() {
 
-        int numberOfItems = 30;
+        int numberOfItems = 8;
 
         int rowSize = 3;
 
-        for(int i = 0; i < numberOfItems / rowSize; i++) {
+        DisplayMetrics displayMetrics = new DisplayMetrics();
+        getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
+        int imageWidth = displayMetrics.widthPixels / rowSize;
 
-            LayoutInflater inflater = LayoutInflater.from(this);
+        for(int i = 0; i < numberOfItems; i++) {
 
-            LinearLayout row = (LinearLayout) inflater.inflate(R.layout.study_row, null, false);
 
-            for(int j = 0; j < 5; j++) {
-                ImageView imageView = new ImageView(this, null, R.style.StudyImage);
-                imageView.setImageDrawable(getResources().getDrawable(R.drawable.creditcard, getTheme()));
-                imageView.setAdjustViewBounds(true);
+            ImageView imageView = new ImageView(this, null, R.style.StudyImage);
+            imageView.setImageDrawable(getResources().getDrawable(R.drawable.creditcard, getTheme()));
+            imageView.setAdjustViewBounds(true);
+            FlexboxLayout.LayoutParams params = new FlexboxLayout.LayoutParams(
+                    FlexboxLayout.LayoutParams.ALIGN_SELF_AUTO,
+                    FlexboxLayout.LayoutParams.ALIGN_SELF_AUTO
+            );
 
-                LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(
-                        LinearLayout.LayoutParams.WRAP_CONTENT,
-                        LinearLayout.LayoutParams.WRAP_CONTENT
-                );
-                params.weight = 1;
+            params.width = imageWidth;
+            imageView.setLayoutParams(params);
 
-                imageView.setLayoutParams(params);
-
-                row.addView(imageView);
-            }
-
-            mContainerLayout.addView(row);
+            mContainerLayout.addView(imageView);
         }
     }
 }
