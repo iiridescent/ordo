@@ -1,12 +1,18 @@
 package com.base512.ordo;
 
+import android.content.Intent;
+import android.provider.ContactsContract;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
-import android.widget.Button;
+import android.view.animation.Interpolator;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Toast;
+
+import com.base512.ordo.data.DataModel;
+import com.base512.ordo.data.User;
+import com.base512.ordo.data.source.BaseDataSource;
 
 public class LoginActivity extends AppCompatActivity {
 
@@ -31,26 +37,33 @@ public class LoginActivity extends AppCompatActivity {
         mUnlockButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                showMessage();
+                attemptLogin();
             }
         });
     }
 
-    private void showMessage() {
+    private void attemptLogin() {
 
-        String getFromLoginInput = mLoginInput.getText().toString();
+        String keyCode = mLoginInput.getText().toString().toLowerCase();
 
-        String welcomeMessage = "0";
+        DataModel.getDataModel().attemptLogin(keyCode, new BaseDataSource.GetDataCallback<User>() {
+            @Override
+            public void onDataLoaded(User user) {
+                DataModel.getDataModel().setUser(user);
+                returnToMenu();
+            }
 
-        if (getFromLoginInput.equals("anima")) {
-            welcomeMessage = "Welcome, Gray";
-        } else if (getFromLoginInput.equals("weirdname")) {
-            welcomeMessage = "Welcome, Thomas";
-        }else{
-            welcomeMessage = "ERROR";
-        }
+            @Override
+            public void onDataError() {
+                Toast.makeText(LoginActivity.this, "FAILURRRE", Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
 
-        Toast.makeText(this, welcomeMessage, Toast.LENGTH_LONG).show();
+    private void returnToMenu() {
+        Intent menuIntent = new Intent(LoginActivity.this, MenuActivity.class);
+        startActivity(menuIntent);
+        finish();
     }
 
 }

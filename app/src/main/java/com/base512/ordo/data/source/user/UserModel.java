@@ -1,9 +1,10 @@
-package com.base512.ordo.data.source;
+package com.base512.ordo.data.source.user;
 
 
 import android.content.Context;
 
 import com.base512.ordo.data.User;
+import com.base512.ordo.data.source.BaseDataSource;
 
 public class UserModel {
 
@@ -25,6 +26,14 @@ public class UserModel {
         }
 
         return mUser;
+    }
+
+    public void getUser(String keyCode, BaseDataSource.GetDataCallback<User> getUserCallback) {
+        if (mUser == null || !mUser.getId().equals(keyCode)) {
+            mUserRepository.getUser(keyCode, getUserCallback);
+        } else {
+            getUserCallback.onDataLoaded(mUser);
+        }
     }
 
     public void saveUser(User user) {

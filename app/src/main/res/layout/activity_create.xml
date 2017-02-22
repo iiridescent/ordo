@@ -28,17 +28,25 @@
         app:layout_constraintTop_toTopOf="@+id/numberOfPictures"
         app:layout_constraintBottom_toBottomOf="@+id/numberOfPictures" />
 
+    <!-- Dummy item to prevent number view from receiving focus -->
+    <LinearLayout
+            android:focusable="true"
+            android:focusableInTouchMode="true"
+            android:layout_width="0px"
+            android:layout_height="0px"/>
+
     <EditText
-        android:layout_width="50dp"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:inputType="number"
-        android:ems="10"
         android:id="@+id/numberOfPictures"
         android:layout_centerVertical="true"
         android:layout_centerHorizontal="true"
         android:layout_marginStart="16dp"
         android:text="0"
         android:textAlignment="center"
+        android:textAppearance="@style/Base.TextAppearance.AppCompat.Display3"
+        style="@style/NumberPicker"
         app:layout_constraintLeft_toLeftOf="parent"
         android:layout_marginEnd="16dp"
         app:layout_constraintRight_toRightOf="parent"
