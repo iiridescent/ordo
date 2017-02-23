@@ -1,5 +1,7 @@
 package com.base512.ordo.data;
 
+import android.os.SystemClock;
+
 import java.util.ArrayList;
 
 /**
@@ -27,12 +29,15 @@ public class Game extends DataObject {
 
     private final String mCreator;
 
-    public Game(String id, State state, GameObject[] gameObjects, String creator) {
+    private final long mStartTime;
+
+    public Game(String id, State state, GameObject[] gameObjects, String creator, long startTime) {
         super(id);
 
         mState = state;
         mGameObjects = gameObjects;
         mCreator = creator;
+        mStartTime = startTime;
     }
 
     public State getState() {
@@ -45,5 +50,20 @@ public class Game extends DataObject {
 
     public String getCreator() {
         return mCreator;
+    }
+
+    public long getStartTime() {
+        return mStartTime;
+    }
+
+    public Game withState(State state) {
+        long startTime;
+        if(state == State.STUDY) {
+            startTime = System.currentTimeMillis();
+        } else {
+            startTime = Long.MIN_VALUE;
+        }
+
+        return new Game(getId(), state, mGameObjects, mCreator, startTime);
     }
 }

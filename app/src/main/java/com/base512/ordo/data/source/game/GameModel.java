@@ -69,7 +69,13 @@ public class GameModel {
     }
 
     public void saveGame(Game game) {
-        mGameRepository.setCurrentGame(game, mContext);
+        mGameRepository.setCurrentGame(game, mContext, null);
+    }
+
+    public void setGameState(Game.State state, final BaseDataSource.UpdateDataCallback updateGameCallback) {
+        Game game = mGame.withState(state);
+        mGameRepository.setCurrentGame(game, mContext, updateGameCallback);
+        mGame = game;
     }
 
     public void setGuesses(UserGameGuesses userGameGuesses, BaseDataSource.UpdateDataCallback updateUserGameGuessesCallback) {

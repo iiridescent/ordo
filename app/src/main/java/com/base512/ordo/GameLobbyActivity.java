@@ -60,7 +60,7 @@ public class GameLobbyActivity extends OrdoActivity {
         mStartButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                sendToGame();
+                startGame();
             }
         });
 
@@ -106,9 +106,20 @@ public class GameLobbyActivity extends OrdoActivity {
         animationSet.start();
     }
 
-    private void sendToGame() {
-        Intent intent = new Intent(this, GameStudyActivity.class);
-        startActivity(intent);
+    private void startGame() {
+        DataModel.getDataModel().setGameState(Game.State.STUDY, new BaseDataSource.UpdateDataCallback() {
+            @Override
+            public void onDataUpdated(String id) {
+                Intent intent = new Intent(GameLobbyActivity.this, GameStudyActivity.class);
+                startActivity(intent);
+            }
+
+            @Override
+            public void onDataError() {
+                Intent intent = new Intent(GameLobbyActivity.this, MenuActivity.class);
+                startActivity(intent);
+            }
+        });
     }
 
     private void returnToMenu() {

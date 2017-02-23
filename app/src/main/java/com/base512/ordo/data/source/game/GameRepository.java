@@ -39,6 +39,7 @@ public class GameRepository implements GameDataSource {
     private static final String OBJECTS = "objects";
     private static final String STATE = "state";
     private static final String CREATOR = "createdBy";
+    private static final String START_TIME = "startTime";
     private static final String GUESSES = "guesses";
 
     // Key to current game object in shared preferences
@@ -46,6 +47,7 @@ public class GameRepository implements GameDataSource {
     private static final String CURRENT_GAME_STATE = "current_game_state";
     private static final String CURRENT_GAME_OBJECTS = "current_game_objects";
     private static final String CURRENT_GAME_CREATOR = "current_game_creator";
+    private static final String CURRENT_GAME_START_TIME = "current_game_start_time";
 
     private static SharedPreferences sPrefs;
 
@@ -67,6 +69,7 @@ public class GameRepository implements GameDataSource {
         final Game.State state = Game.State.values()[prefs.getInt(CURRENT_GAME_STATE, 0)];
         Set<String> objectIds = prefs.getStringSet(CURRENT_GAME_OBJECTS, null);
         final String creator = prefs.getString(CURRENT_GAME_CREATOR, null);
+        final long startTime = prefs.getLong(CURRENT_GAME_START_TIME, Long.MIN_VALUE);
 
         final ArrayList<Task<GameObject>> gameObjectLoadTasks = new ArrayList<>();
 
@@ -100,14 +103,14 @@ public class GameRepository implements GameDataSource {
                     }
                     gameObjects[i] = gameObjectLoadTasks.get(i).getResult();
                 }
-                Game game = new Game(id, state, gameObjects, creator);
+                Game game = new Game(id, state, gameObjects, creator, startTime);
                 gameLoadDataCallback.onDataLoaded(game);
             }
         });
     }
 
     @Override
-    public void setCurrentGame(@NonNull Game game, @NonNull Context context) {
+    public void setCurrentGame(@NonNull final Game game, @NonNull final Context context, final BaseDataSource.UpdateDataCallback updateGameCallback) {
         SharedPreferences prefs = getSharedPreferences(context);
         SharedPreferences.Editor editor = prefs.edit();
 
@@ -121,8 +124,30 @@ public class GameRepository implements GameDataSource {
         editor.putString(CURRENT_GAME_CREATOR, game.getCreator());
         editor.putInt(CURRENT_GAME_STATE, game.getState().ordinal());
         editor.putStringSet(CURRENT_GAME_OBJECTS, gameObjectIds);
+        editor.putLong(CURRENT_GAME_START_TIME, game.getStartTime());
 
         editor.apply();
+
+        HashMap<String, Object> gameObjectValues = new HashMap<>();
+
+        for(GameObject gameObject : game.getGameObjects()) {
+            gameObjectValues.put(gameObject.getId(), true);
+        }
+
+        final DatabaseReference gameReference = getDatabaseReference().child(game.getId());
+
+        HashMap<String, Object> gameValues = new HashMap<>();
+
+        gameValues.put(STATE, game.getState().ordinal());
+        gameValues.put(CREATOR, DataModel.getDataModel().getUser().getId());
+        gameValues.put(OBJECTS, gameObjectValues);
+        gameValues.put(START_TIME, game.getStartTime());
+        gameReference.updateChildren(gameValues).addOnCompleteListener(new OnCompleteListener<Void>() {
+            @Override
+            public void onComplete(@NonNull Task<Void> task) {
+                updateGameCallback.onDataUpdated(game.getId());
+            }
+        });
     }
 
     @Override
@@ -131,13 +156,13 @@ public class GameRepository implements GameDataSource {
     }
 
     @Override
-    public void setGameState(@NonNull String gameId, @NonNull Game.State state, @NonNull Context context, @NonNull BaseDataSource.UpdateDataCallback updateGameCallback) {
+    public void setGameState(@NonNull String gameId, @NonNull Game.State state, @NonNull Context context, @NonNull BaseDataSource.GetDataCallback<Game> updateGameCallback) {
 
     }
 
     @Override
     public void createGame(@NonNull final Game.Config config, @NonNull final Context context, final BaseDataSource.GetDataCallback<Game> gameDataCallback) {
-    final DatabaseReference databaseReference = getDatabaseReference();
+        final DatabaseReference databaseReference = getDatabaseReference();
 
         final TaskCompletionSource<String> gameCodeTaskCompletionSource = new TaskCompletionSource<>();
         final Task<String> gameCodeTask = gameCodeTaskCompletionSource.getTask();
@@ -201,9 +226,25 @@ public class GameRepository implements GameDataSource {
                                 gameCodeTask.getResult(),
                                 Game.State.WAITING,
                                 gameObjects,
-                                DataModel.getDataModel().getUser().getId()
+                                DataModel.getDataModel().getUser().getId(),
+                                Long.MIN_VALUE
                         );
-                        setCurrentGame(game, context);
+                        SharedPreferences prefs = getSharedPreferences(context);
+                        SharedPreferences.Editor editor = prefs.edit();
+
+                        HashSet<String> gameObjectIds = new HashSet<>();
+
+                        for(GameObject gameObject : game.getGameObjects()) {
+                            gameObjectIds.add(gameObject.getId());
+                        }
+
+                        editor.putString(CURRENT_GAME_ID, game.getId());
+                        editor.putString(CURRENT_GAME_CREATOR, game.getCreator());
+                        editor.putInt(CURRENT_GAME_STATE, game.getState().ordinal());
+                        editor.putStringSet(CURRENT_GAME_OBJECTS, gameObjectIds);
+                        editor.putLong(CURRENT_GAME_START_TIME, game.getStartTime());
+
+                        editor.apply();
                         gameDataCallback.onDataLoaded(game);
                     }
                 });
