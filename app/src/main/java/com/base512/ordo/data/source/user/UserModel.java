@@ -28,9 +28,20 @@ public class UserModel {
         return mUser;
     }
 
-    public void getUser(String keyCode, BaseDataSource.GetDataCallback<User> getUserCallback) {
+    public void getUser(String keyCode, final BaseDataSource.GetDataCallback<User> getUserCallback) {
         if (mUser == null || !mUser.getId().equals(keyCode)) {
-            mUserRepository.getUser(keyCode, getUserCallback);
+            mUserRepository.getUser(keyCode, new BaseDataSource.GetDataCallback<User>() {
+                @Override
+                public void onDataLoaded(User user) {
+                    mUser = user;
+                    getUserCallback.onDataLoaded(user);
+                }
+
+                @Override
+                public void onDataError() {
+                    getUserCallback.onDataError();
+                }
+            });
         } else {
             getUserCallback.onDataLoaded(mUser);
         }
@@ -38,6 +49,7 @@ public class UserModel {
 
     public void saveUser(User user) {
         mUserRepository.setSavedUser(mContext, user);
+        mUser = user;
     }
 
 }

@@ -4,6 +4,7 @@ import com.google.android.flexbox.FlexboxLayout;
 
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
+import android.support.graphics.drawable.AnimatedVectorDrawableCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.util.DisplayMetrics;
 import android.util.Log;
@@ -17,7 +18,7 @@ import com.base512.ordo.data.source.BaseDataSource;
 import com.base512.ordo.data.source.DataModel;
 import com.bumptech.glide.Glide;
 
-public class GameStudyActivity extends AppCompatActivity {
+public class GameStudyActivity extends OrdoActivity {
 
     // Game object container layout
     private FlexboxLayout mContainerLayout;
@@ -45,7 +46,7 @@ public class GameStudyActivity extends AppCompatActivity {
         DataModel.getDataModel().getCurrentGame(new BaseDataSource.GetDataCallback<Game>() {
             @Override
             public void onDataLoaded(Game game) {
-                Toast.makeText(GameStudyActivity.this, "Number of game objects "+game.getGameObjects().length, Toast.LENGTH_SHORT).show();
+                mCreatorLabel.setText(game.getCreator());
             }
 
             @Override
@@ -56,6 +57,8 @@ public class GameStudyActivity extends AppCompatActivity {
     }
 
     public void displayRows() {
+        final AnimatedVectorDrawableCompat loadingAnimation = AnimatedVectorDrawableCompat.create(GameStudyActivity.this, R.drawable.ic_memory_animated);
+        loadingAnimation.start();
 
         DataModel.getDataModel().getCurrentGame(new BaseDataSource.GetDataCallback<Game>() {
             @Override
@@ -74,7 +77,12 @@ public class GameStudyActivity extends AppCompatActivity {
                     DataModel.getDataModel().getGameObjectDrawable(gameObjects[i].getImageName(), new BaseDataSource.GetDataCallback<Integer>() {
                         @Override
                         public void onDataLoaded(Integer integer) {
-                            Glide.with(getApplicationContext()).load(integer).fitCenter().crossFade().placeholder(R.drawable.ic_memory_black_24dp).into(imageView);
+
+                            imageView.setScaleType(ImageView.ScaleType.CENTER);
+                            imageView.setAdjustViewBounds(false);
+                            imageView.setImageDrawable(loadingAnimation);
+
+                            Glide.with(getApplicationContext()).load(integer).fitCenter().crossFade().placeholder(R.drawable.ic_memory_animated).into(imageView);
                         }
 
                         @Override

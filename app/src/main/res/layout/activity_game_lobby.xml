@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                                             xmlns:app="http://schemas.android.com/apk/res-auto"
+                                             xmlns:tools="http://schemas.android.com/tools"
+                                             android:id="@+id/activity_lobby"
+                                             android:layout_width="match_parent"
+                                             android:layout_height="match_parent"
+                                             tools:context="com.base512.ordo.GameLobbyActivity">
+
+    <TextView
+            android:text="lobby"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/lobbyLabel"
+            style="@style/TitleLabelStyle"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintLeft_toLeftOf="parent"/>
+
+    <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingLeft="30dp"
+            android:paddingRight="30dp"
+            android:background="@drawable/code_stroke"
+            android:backgroundTint="@color/colorAccent"
+            android:backgroundTintMode="src_in"
+            app:layout_constraintTop_toBottomOf="@+id/lobbyLabel"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintLeft_toLeftOf="parent"
+            android:id="@+id/gameCodeContainer">
+
+        <TextView
+                android:textAppearance="@style/TextAppearance.GameCodeLabel"
+                tools:text="0000"
+                android:textAllCaps="true"
+                android:layout_height="wrap_content"
+                android:layout_width="wrap_content"
+                android:textIsSelectable="true"
+                android:maxLength="4"
+                android:id="@+id/gameCodeLabel"/>
+    </LinearLayout>
+
+    <TextView
+            android:text="game code"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/gameCodeInform"
+            style="@style/CaptionLabelStyle"
+            android:layout_marginEnd="16dp"
+            app:layout_constraintRight_toRightOf="parent"
+            android:layout_marginStart="16dp"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/gameCodeContainer"
+            android:layout_marginTop="8dp"/>
+
+    <Button
+            android:text="start"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            style="@style/MenuButton"
+            android:id="@+id/gameStartButton"
+            android:layout_marginStart="16dp"
+            app:layout_constraintLeft_toLeftOf="parent"
+            android:layout_marginEnd="16dp"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            android:layout_marginBottom="32dp"/>
+
+    <ImageView
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:layout_marginTop="2dp"
+            app:srcCompat="@drawable/ic_memory_black_24dp"
+            android:layout_marginStart="8dp"
+            app:layout_constraintLeft_toLeftOf="parent"
+            android:transitionName="@string/logo_transition_name"
+            android:id="@+id/logoImage"
+            app:layout_constraintBottom_toBottomOf="@+id/lobbyLabel"
+            app:layout_constraintTop_toTopOf="@+id/lobbyLabel"/>
+
+</android.support.constraint.ConstraintLayout>

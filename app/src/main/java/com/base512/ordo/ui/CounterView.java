@@ -4,10 +4,6 @@ import android.content.Context;
 import android.util.AttributeSet;
 import android.widget.TextView;
 
-/**
- * Created by server on 2/22/17.
- */
-
 public class CounterView extends TextView {
     private int mNumerator;
     private int mDenominator;

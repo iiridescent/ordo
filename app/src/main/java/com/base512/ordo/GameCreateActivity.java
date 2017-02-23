@@ -1,7 +1,6 @@
 package com.base512.ordo;
 
 import android.content.Intent;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
@@ -12,7 +11,7 @@ import com.base512.ordo.data.Game;
 import com.base512.ordo.data.source.BaseDataSource;
 import com.base512.ordo.data.source.DataModel;
 
-public class GameCreateActivity extends AppCompatActivity {
+public class GameCreateActivity extends OrdoActivity {
 
     private ImageView mAddToNumber;
 
@@ -25,7 +24,7 @@ public class GameCreateActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_create);
+        setContentView(R.layout.activity_game_create);
 
         setupViews();
     }

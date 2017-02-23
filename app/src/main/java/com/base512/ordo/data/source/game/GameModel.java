@@ -24,19 +24,42 @@ public class GameModel {
 
     public void createGame(Game.Config gameConfig, BaseDataSource.GetDataCallback<Game> gameCreateDataCallback) {
         mGameRepository.createGame(gameConfig, mContext, gameCreateDataCallback);
+        mGame = null;
     }
 
-    public void getCurrentGame(BaseDataSource.GetDataCallback<Game> gameDataCallback) {
+    public void getCurrentGame(final BaseDataSource.GetDataCallback<Game> gameDataCallback) {
         if (mGame == null) {
-            mGameRepository.getCurrentGame(mContext, gameDataCallback);
+            mGameRepository.getCurrentGame(mContext, new BaseDataSource.GetDataCallback<Game>() {
+                @Override
+                public void onDataLoaded(Game game) {
+                    mGame = game;
+                    gameDataCallback.onDataLoaded(game);
+                }
+
+                @Override
+                public void onDataError() {
+                    gameDataCallback.onDataError();
+                }
+            });
         } else {
             gameDataCallback.onDataLoaded(mGame);
         }
     }
 
-    public void getGame(String id, BaseDataSource.GetDataCallback<Game> getGameCallback) {
+    public void getGame(String id, final BaseDataSource.GetDataCallback<Game> getGameCallback) {
         if (mGame == null || !mGame.getId().equals(id)) {
-            mGameRepository.getGame(id, getGameCallback);
+            mGameRepository.getGame(id, new BaseDataSource.GetDataCallback<Game>() {
+                @Override
+                public void onDataLoaded(Game game) {
+                    // mGame = game;
+                    getGameCallback.onDataLoaded(game);
+                }
+
+                @Override
+                public void onDataError() {
+                    getGameCallback.onDataError();
+                }
+            });
         } else {
             getGameCallback.onDataLoaded(mGame);
         }

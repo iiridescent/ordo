@@ -1,27 +1,77 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.design.widget.CoordinatorLayout
+<android.support.constraint.ConstraintLayout
         xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:app="http://schemas.android.com/apk/res-auto"
         xmlns:tools="http://schemas.android.com/tools"
+        android:id="@+id/content_main"
+        tools:ignore="MissingPrefix"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:fitsSystemWindows="true"
-        tools:context="com.base512.ordo.MenuActivity">
+        android:layout_height="match_parent">
 
-<!--    <android.support.design.widget.AppBarLayout
+    <TextView
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_width="match_parent"
-            android:theme="@style/AppTheme.AppBarOverlay">
+            android:layout_centerHorizontal="true"
+            android:textAppearance="@style/TextAppearance.GameCodeLabel"
+            fontPath="fonts/Montserrat-ExtraLight.ttf"
+            android:text="ordo"
+            android:id="@+id/logoView"
+            android:layout_marginEnd="16dp"
+            app:layout_constraintRight_toRightOf="parent"
+            android:layout_marginStart="16dp"
+            app:layout_constraintLeft_toLeftOf="parent"
+            android:layout_marginTop="112dp"
+            app:layout_constraintTop_toTopOf="parent"/>
 
-        <android.support.v7.widget.Toolbar
-                android:id="@+id/toolbar"
-                android:layout_width="match_parent"
-                android:layout_height="?attr/actionBarSize"
-                android:background="?attr/colorPrimary"
-                app:popupTheme="@style/AppTheme.PopupOverlay"/>
+    <ImageView
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            app:srcCompat="@drawable/ic_memory_black_24dp"
+            android:transitionName="@string/logo_transition_name"
+            android:layout_marginEnd="16dp"
+            app:layout_constraintRight_toRightOf="parent"
+            android:layout_marginStart="16dp"
+            app:layout_constraintLeft_toLeftOf="parent"
+            android:id="@+id/logoImage"
+            android:layout_marginTop="72dp"
+            app:layout_constraintTop_toTopOf="parent"
+            />
 
-    </android.support.design.widget.AppBarLayout>-->
+    <Button
+            android:text="@string/new_game"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/newGameButton"
+            style="@style/MenuButton"
+            android:layout_marginStart="16dp"
+            app:layout_constraintLeft_toLeftOf="parent"
+            android:layout_marginEnd="16dp"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/logoView"
+            app:layout_constraintBottom_toTopOf="@+id/joinGameButton"/>
 
-    <include layout="@layout/content_menu"/>
+    <Button
+            android:text="@string/join_game"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/joinGameButton"
+            style="@style/MenuButton"
+            android:enabled="false"
+            android:layout_marginStart="16dp"
+            app:layout_constraintLeft_toLeftOf="parent"
+            android:layout_marginEnd="16dp"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            android:layout_marginBottom="120dp"
+            />
 
-</android.support.design.widget.CoordinatorLayout>
+    <Button
+            android:text="Button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/statsButton"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/joinGameButton"
+            android:visibility="gone"/>
+</android.support.constraint.ConstraintLayout>

@@ -2,41 +2,45 @@ package com.base512.ordo;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageView;
 
 import com.base512.ordo.data.source.DataModel;
+import com.base512.ordo.util.ActivityUtils;
 
-public class MenuActivity extends AppCompatActivity {
+import butterknife.BindView;
+import butterknife.ButterKnife;
 
-    private Button mNewGame;
+public class MenuActivity extends OrdoActivity {
 
-    private Button mJoinGame;
+    @BindView(R.id.newGameButton)
+    Button mNewGameButton;
+
+    @BindView(R.id.joinGameButton)
+    Button mJoinGameButton;
+
+    @BindView(R.id.logoImage)
+    ImageView mLogoImage;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_menu);
+        ButterKnife.bind(this);
 
         checkAuthentication();
-
         setupViews();
     }
 
     private void setupViews(){
-        mNewGame = (Button) findViewById(R.id.newGameButton);
-
-        mJoinGame = (Button) findViewById(R.id.joinGameButton);
-
-        mNewGame.setOnClickListener(new View.OnClickListener() {
+        mNewGameButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 newGame();
             }
         });
-
-        mJoinGame.setOnClickListener(new View.OnClickListener() {
+        mJoinGameButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 joinGame();
@@ -53,8 +57,7 @@ public class MenuActivity extends AppCompatActivity {
     }
 
     private void newGame() {
-        Intent intent = new Intent(this, GameCreateActivity.class);
-        startActivity(intent);
+        ActivityUtils.openActivityWithTransition(this, GameCreateActivity.class, null, mLogoImage, getString(R.string.logo_transition_name));
     }
 
     private void joinGame() {

@@ -12,7 +12,7 @@ import com.base512.ordo.data.source.DataModel;
 import com.base512.ordo.data.User;
 import com.base512.ordo.data.source.BaseDataSource;
 
-public class LoginActivity extends AppCompatActivity {
+public class LoginActivity extends OrdoActivity {
 
     private ImageView mUnlockButton;
 
