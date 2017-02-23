@@ -3,6 +3,7 @@ package com.base512.ordo.data.source.game;
 import android.content.Context;
 
 import com.base512.ordo.data.Game;
+import com.base512.ordo.data.UserGameGuesses;
 import com.base512.ordo.data.source.BaseDataSource;
 
 /**
@@ -14,6 +15,8 @@ public class GameModel {
 
     /** The current state of the game. */
     private Game mGame;
+
+    private UserGameGuesses mUserGameGuesses;
 
     private GameRepository mGameRepository;
 
@@ -67,5 +70,10 @@ public class GameModel {
 
     public void saveGame(Game game) {
         mGameRepository.setCurrentGame(game, mContext);
+    }
+
+    public void setGuesses(UserGameGuesses userGameGuesses, BaseDataSource.UpdateDataCallback updateUserGameGuessesCallback) {
+        mUserGameGuesses = userGameGuesses;
+        mGameRepository.setGuesses(userGameGuesses, updateUserGameGuessesCallback);
     }
 }

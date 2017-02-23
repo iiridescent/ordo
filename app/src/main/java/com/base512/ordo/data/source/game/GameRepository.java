@@ -18,6 +18,7 @@ import android.support.annotation.NonNull;
 
 import com.base512.ordo.data.Game;
 import com.base512.ordo.data.GameObject;
+import com.base512.ordo.data.UserGameGuesses;
 import com.base512.ordo.data.source.BaseDataSource;
 import com.base512.ordo.data.source.DataModel;
 
@@ -38,6 +39,7 @@ public class GameRepository implements GameDataSource {
     private static final String OBJECTS = "objects";
     private static final String STATE = "state";
     private static final String CREATOR = "createdBy";
+    private static final String GUESSES = "guesses";
 
     // Key to current game object in shared preferences
     private static final String CURRENT_GAME_ID = "current_game_id";
@@ -208,6 +210,46 @@ public class GameRepository implements GameDataSource {
             }
         });
 
+    }
+
+    @Override
+    public void getGuesses(@NonNull BaseDataSource.GetDataCallback<UserGameGuesses> userGameGuessesDataCallback) {
+
+    }
+
+    @Override
+    public void setGuesses(@NonNull final UserGameGuesses userGameGuesses, @NonNull final BaseDataSource.UpdateDataCallback updateUserGameGuessesCallback) {
+        DatabaseReference guessesReference = getDatabaseReference().child(GUESSES).child(userGameGuesses.getGameId()).child(userGameGuesses.getUserId());
+
+        HashMap<String, Object> guessValues = new HashMap<>();
+
+        for(String guess : userGameGuesses.getGuesses()) {
+            guessValues.put(guess, true);
+        }
+
+        guessesReference.updateChildren(guessValues).addOnCompleteListener(new OnCompleteListener<Void>() {
+            @Override
+            public void onComplete(@NonNull Task<Void> task) {
+                if(task.getException() == null) {
+                    updateUserGameGuessesCallback.onDataUpdated(userGameGuesses.getUserId());
+                } else {
+                    updateUserGameGuessesCallback.onDataError();
+                }
+            }
+        });
+
+        /*Query userGameGuessesQuery = databaseReference.child(GUESSES).child(userGameGuesses.getGameId()).child(userGameGuesses.getUserId());
+        userGameGuessesQuery.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                updateUserGameGuessesCallback.onDataError();
+            }
+        });*/
     }
 
     private void generateGameCode(final BaseDataSource.GetDataCallback<String> getGameCodeCallback) {

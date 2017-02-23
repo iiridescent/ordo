@@ -6,6 +6,7 @@ import android.graphics.drawable.Drawable;
 import com.base512.ordo.data.Game;
 import com.base512.ordo.data.GameObject;
 import com.base512.ordo.data.User;
+import com.base512.ordo.data.UserGameGuesses;
 import com.base512.ordo.data.source.game.GameModel;
 import com.base512.ordo.data.source.gameObject.GameObjectModel;
 import com.base512.ordo.data.source.user.UserModel;
@@ -85,6 +86,10 @@ public class DataModel {
 
     public void createGame(Game.Config gameConfig, BaseDataSource.GetDataCallback<Game> gameCreateDataCallback) {
         mGameModel.createGame(gameConfig, gameCreateDataCallback);
+    }
+
+    public void setGuesses(UserGameGuesses userGameGuesses, BaseDataSource.UpdateDataCallback updateUserGameGuessesCallback) {
+        mGameModel.setGuesses(userGameGuesses, updateUserGameGuessesCallback);
     }
 
 }
