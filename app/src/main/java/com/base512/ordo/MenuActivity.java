@@ -61,7 +61,6 @@ public class MenuActivity extends OrdoActivity {
     }
 
     private void joinGame() {
-        Intent intent = new Intent(this, GameJoinActivity.class);
-        startActivity(intent);
+        ActivityUtils.openActivityWithTransition(this, GameJoinActivity.class, null, mLogoImage, getString(R.string.logo_transition_name));
     }
 }

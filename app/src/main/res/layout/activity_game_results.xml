@@ -11,7 +11,7 @@
     android:paddingTop="@dimen/activity_vertical_margin"
     tools:context="com.base512.ordo.GameResultsActivity">
 
-    <EditText
+    <TextView
         android:layout_width="150dp"
         android:layout_height="100dp"
         android:inputType="number"
@@ -75,5 +75,18 @@
         app:layout_constraintHorizontal_bias="0.85"
         app:layout_constraintBottom_toBottomOf="parent"
         android:layout_marginBottom="16dp" />
+
+    <ImageView
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:layout_marginTop="2dp"
+        android:clickable="true"
+        app:srcCompat="@drawable/ic_memory_black_24dp"
+        android:layout_marginStart="16dp"
+        app:layout_constraintLeft_toLeftOf="parent"
+        android:transitionName="@string/logo_transition_name"
+        android:id="@+id/logoImage"
+        app:layout_constraintBottom_toBottomOf="@+id/creatorLabel"
+        app:layout_constraintTop_toTopOf="@+id/creatorLabel"/>
 
 </android.support.constraint.ConstraintLayout>
