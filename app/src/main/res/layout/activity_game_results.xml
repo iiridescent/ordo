@@ -11,7 +11,7 @@
     android:paddingTop="@dimen/activity_vertical_margin"
     tools:context="com.base512.ordo.GameResultsActivity">
 
-    <EditText
+    <TextView
         android:layout_width="150dp"
         android:layout_height="100dp"
         android:inputType="number"
