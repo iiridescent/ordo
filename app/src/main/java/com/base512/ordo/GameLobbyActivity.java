@@ -11,6 +11,7 @@ import android.os.Bundle;
 import android.support.v4.content.ContextCompat;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -34,6 +35,8 @@ public class GameLobbyActivity extends OrdoActivity {
     @BindView(R.id.gameCodeContainer)
     LinearLayout mGameCodeContainer;
 
+    private ImageView mReturnToMenu;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -45,6 +48,15 @@ public class GameLobbyActivity extends OrdoActivity {
     }
 
     private void setupViews() {
+        mReturnToMenu = (ImageView) findViewById(R.id.logoImage);
+
+        mReturnToMenu.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                returnToMenu();
+            }
+        });
+
         mStartButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -96,6 +108,11 @@ public class GameLobbyActivity extends OrdoActivity {
 
     private void sendToGame() {
         Intent intent = new Intent(this, GameStudyActivity.class);
+        startActivity(intent);
+    }
+
+    private void returnToMenu() {
+        Intent intent = new Intent(this, MenuActivity.class);
         startActivity(intent);
     }
 

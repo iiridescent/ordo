@@ -21,6 +21,8 @@ public class GameCreateActivity extends OrdoActivity {
 
     private Button mCreateButton;
 
+    private ImageView mReturnToMenu;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -34,7 +36,14 @@ public class GameCreateActivity extends OrdoActivity {
         mNumberBox = (EditText) findViewById(R.id.numberOfPictures);
         mAddToNumber = (ImageView) findViewById(R.id.addToNumber);
         mSubtractFromNumber = (ImageView) findViewById(R.id.subtractFromNumber);
+        mReturnToMenu = (ImageView) findViewById(R.id.logoImage);
 
+        mReturnToMenu.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                returnToMenu();
+            }
+        });
         mCreateButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -88,6 +97,11 @@ public class GameCreateActivity extends OrdoActivity {
 
     private void goToLobby() {
         Intent intent = new Intent(this, GameLobbyActivity.class);
+        startActivity(intent);
+    }
+
+    private void returnToMenu() {
+        Intent intent = new Intent(this, MenuActivity.class);
         startActivity(intent);
     }
 

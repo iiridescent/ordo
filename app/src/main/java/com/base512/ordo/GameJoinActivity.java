@@ -17,7 +17,7 @@ public class GameJoinActivity extends OrdoActivity {
     }
 
     private void setupViews() {
-        mExitButton = (Button) findViewById(R.id.exitButton);
+        mExitButton = (Button) findViewById(R.id.gameExitButton);
 
         mExitButton.setOnClickListener(new View.OnClickListener() {
             @Override

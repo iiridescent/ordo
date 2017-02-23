@@ -5,12 +5,15 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageView;
 
 public class GameResultsActivity extends AppCompatActivity {
 
     private Button mMenuButton;
 
     private Button mReplayButton;
+
+    private ImageView mReturnToMenu;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -22,7 +25,16 @@ public class GameResultsActivity extends AppCompatActivity {
     public void setupViews() {
         mMenuButton = (Button) findViewById(R.id.sendToMenu);
 
+        mReturnToMenu = (ImageView) findViewById(R.id.logoImage);
+
         mReplayButton = (Button) findViewById(R.id.replayButton);
+
+        mReturnToMenu.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                sendToMenu();
+            }
+        });
 
         mReplayButton.setOnClickListener(new View.OnClickListener() {
             @Override
