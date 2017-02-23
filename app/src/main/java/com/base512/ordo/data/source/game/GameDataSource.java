@@ -4,6 +4,7 @@ import android.content.Context;
 import android.support.annotation.NonNull;
 
 import com.base512.ordo.data.Game;
+import com.base512.ordo.data.UserGameGuesses;
 import com.base512.ordo.data.source.BaseDataSource;
 
 /**
@@ -20,4 +21,8 @@ public interface GameDataSource {
     void setGameState(@NonNull String gameId, @NonNull Game.State state, @NonNull Context context, @NonNull BaseDataSource.UpdateDataCallback updateGameCallback);
 
     void createGame(@NonNull Game.Config config, @NonNull Context context, BaseDataSource.GetDataCallback<Game> gameDataCallback);
+
+    void getGuesses(@NonNull BaseDataSource.GetDataCallback<UserGameGuesses> userGameGuessesDataCallback);
+
+    void setGuesses(@NonNull UserGameGuesses userGameGuesses, @NonNull BaseDataSource.UpdateDataCallback updateUserGameGuessesCallback);
 }
