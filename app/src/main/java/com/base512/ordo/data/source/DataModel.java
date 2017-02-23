@@ -1,7 +1,9 @@
 package com.base512.ordo.data.source;
 
 import android.content.Context;
+import android.graphics.drawable.Drawable;
 
+import com.base512.ordo.data.Game;
 import com.base512.ordo.data.GameObject;
 import com.base512.ordo.data.User;
 import com.base512.ordo.data.source.game.GameModel;
@@ -67,6 +69,22 @@ public class DataModel {
 
     public void getGameObject(String id, BaseDataSource.GetDataCallback<GameObject> gameObjectDataCallback) {
         mGameObjectModel.getGameObject(id, gameObjectDataCallback);
+    }
+
+    public void getGameObjects(BaseDataSource.LoadDataCallback<GameObject> gameObjectsDataCallback) {
+        mGameObjectModel.loadGameObjects(gameObjectsDataCallback);
+    }
+
+    public void getGameObjectDrawable(String id, BaseDataSource.GetDataCallback<Integer> drawableDataCallback) {
+        mGameObjectModel.getGameObjectDrawable(id, drawableDataCallback);
+    }
+
+    public void getCurrentGame(BaseDataSource.GetDataCallback<Game> gameDataCallback) {
+        mGameModel.getCurrentGame(gameDataCallback);
+    }
+
+    public void createGame(Game.Config gameConfig, BaseDataSource.GetDataCallback<Game> gameCreateDataCallback) {
+        mGameModel.createGame(gameConfig, gameCreateDataCallback);
     }
 
 }

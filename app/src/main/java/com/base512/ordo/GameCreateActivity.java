@@ -8,6 +8,10 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 
+import com.base512.ordo.data.Game;
+import com.base512.ordo.data.source.BaseDataSource;
+import com.base512.ordo.data.source.DataModel;
+
 public class GameCreateActivity extends AppCompatActivity {
 
     private ImageView mAddToNumber;
@@ -22,33 +26,28 @@ public class GameCreateActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_create);
+
         setupViews();
     }
 
     public void setupViews() {
-
         mCreateButton = (Button) findViewById(R.id.createButton);
-
         mNumberBox = (EditText) findViewById(R.id.numberOfPictures);
-
         mAddToNumber = (ImageView) findViewById(R.id.addToNumber);
-
         mSubtractFromNumber = (ImageView) findViewById(R.id.subtractFromNumber);
 
         mCreateButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                sendToLobby();
+                setupGameAndGoToLobby();
             }
         });
-
         mSubtractFromNumber.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 subtractFromNumber();
             }
         });
-
         mAddToNumber.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -58,24 +57,37 @@ public class GameCreateActivity extends AppCompatActivity {
     }
 
     public void addToNumber() {
-
         String getFromNumberBox = mNumberBox.getText().toString();
-
         int numberBoxInteger = Integer.valueOf(getFromNumberBox);
 
         mNumberBox.setText(String.valueOf(numberBoxInteger + 1));
-
     }
 
     private void subtractFromNumber() {
         String getFromNumberBox = mNumberBox.getText().toString();
-
         int numberBoxInteger = Integer.valueOf(getFromNumberBox);
 
         mNumberBox.setText(String.valueOf(numberBoxInteger - 1));
     }
 
-    private void sendToLobby() {
+    private void setupGameAndGoToLobby() {
+        int numberOfObjects = Integer.valueOf(mNumberBox.getText().toString());
+
+        Game.Config gameConfig = new Game.Config(numberOfObjects);
+        DataModel.getDataModel().createGame(gameConfig, new BaseDataSource.GetDataCallback<Game>() {
+            @Override
+            public void onDataLoaded(Game data) {
+                goToLobby();
+            }
+
+            @Override
+            public void onDataError() {
+
+            }
+        });
+    }
+
+    private void goToLobby() {
         Intent intent = new Intent(this, GameLobbyActivity.class);
         startActivity(intent);
     }

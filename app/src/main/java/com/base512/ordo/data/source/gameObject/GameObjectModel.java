@@ -1,11 +1,10 @@
 package com.base512.ordo.data.source.gameObject;
 
 import android.content.Context;
+import android.graphics.drawable.Drawable;
 
-import com.base512.ordo.data.Game;
 import com.base512.ordo.data.GameObject;
 import com.base512.ordo.data.source.BaseDataSource;
-import com.base512.ordo.data.source.game.GameRepository;
 
 import java.util.LinkedHashMap;
 
@@ -32,5 +31,28 @@ public class GameObjectModel {
         } else {
             gameObjectDataCallback.onDataLoaded(mGameObjects.get(id));
         }
+    }
+
+    public void loadGameObjects(final BaseDataSource.LoadDataCallback<GameObject> gameObjectsLoadDataCallback) {
+        if(mGameObjects == null) {
+            mGameObjectRepository.loadGameObjects(new BaseDataSource.LoadDataCallback<GameObject>() {
+                @Override
+                public void onDataLoaded(LinkedHashMap<String, GameObject> gameObjects) {
+                    mGameObjects = gameObjects;
+                    gameObjectsLoadDataCallback.onDataLoaded(gameObjects);
+                }
+
+                @Override
+                public void onDataError() {
+                    gameObjectsLoadDataCallback.onDataError();
+                }
+            });
+        } else {
+            gameObjectsLoadDataCallback.onDataLoaded(mGameObjects);
+        }
+    }
+
+    public void getGameObjectDrawable(String id, BaseDataSource.GetDataCallback<Integer> drawableDataCallback) {
+        mGameObjectRepository.getGameObjectResource(id, mContext, drawableDataCallback);
     }
 }

@@ -4,8 +4,12 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.gms.tasks.TaskCompletionSource;
 import com.google.android.gms.tasks.Tasks;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.Query;
+import com.google.firebase.database.ValueEventListener;
 
 import android.content.Context;
 import android.content.SharedPreferences;
@@ -18,6 +22,9 @@ import com.base512.ordo.data.source.BaseDataSource;
 import com.base512.ordo.data.source.DataModel;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.LinkedHashMap;
 import java.util.Set;
 
 /**
@@ -84,12 +91,12 @@ public class GameRepository implements GameDataSource {
             @Override
             public void onComplete(@NonNull Task<Void> task) {
                 GameObject[] gameObjects = new GameObject[gameObjectLoadTasks.size()];
-                for(Task<GameObject> gameObjectLoadTask : gameObjectLoadTasks) {
-                    if(gameObjectLoadTask.getException() != null) {
+                for(int i = 0; i < gameObjectLoadTasks.size(); i++) {
+                    if(gameObjectLoadTasks.get(i).getException() != null) {
                         gameLoadDataCallback.onDataError();
                         return;
                     }
-                    gameObjectLoadTask.getResult();
+                    gameObjects[i] = gameObjectLoadTasks.get(i).getResult();
                 }
                 Game game = new Game(id, state, gameObjects, creator);
                 gameLoadDataCallback.onDataLoaded(game);
@@ -99,7 +106,21 @@ public class GameRepository implements GameDataSource {
 
     @Override
     public void setCurrentGame(@NonNull Game game, @NonNull Context context) {
+        SharedPreferences prefs = getSharedPreferences(context);
+        SharedPreferences.Editor editor = prefs.edit();
 
+        HashSet<String> gameObjectIds = new HashSet<>();
+
+        for(GameObject gameObject : game.getGameObjects()) {
+            gameObjectIds.add(gameObject.getId());
+        }
+
+        editor.putString(CURRENT_GAME_ID, game.getId());
+        editor.putString(CURRENT_GAME_CREATOR, game.getCreator());
+        editor.putInt(CURRENT_GAME_STATE, game.getState().ordinal());
+        editor.putStringSet(CURRENT_GAME_OBJECTS, gameObjectIds);
+
+        editor.apply();
     }
 
     @Override
@@ -113,10 +134,103 @@ public class GameRepository implements GameDataSource {
     }
 
     @Override
-    public void createGame(@NonNull Game.Config config, @NonNull Context context, BaseDataSource.GetDataCallback<Game> gameDataCallback) {
-        SharedPreferences prefs = getSharedPreferences(context);
+    public void createGame(@NonNull final Game.Config config, @NonNull final Context context, final BaseDataSource.GetDataCallback<Game> gameDataCallback) {
+    final DatabaseReference databaseReference = getDatabaseReference();
 
+        final TaskCompletionSource<String> gameCodeTaskCompletionSource = new TaskCompletionSource<>();
+        final Task<String> gameCodeTask = gameCodeTaskCompletionSource.getTask();
 
+        generateGameCode(new BaseDataSource.GetDataCallback<String>() {
+            @Override
+            public void onDataLoaded(String key) {
+                gameCodeTaskCompletionSource.setResult(key);
+            }
+
+            @Override
+            public void onDataError() {
+                gameDataCallback.onDataError();
+                return;
+            }
+        });
+
+        final TaskCompletionSource<Void> gameObjectsLoadTaskCompletionSource = new TaskCompletionSource<>();
+        Task<Void> gameObjectsLoadTask = gameObjectsLoadTaskCompletionSource.getTask();
+
+        final GameObject[] gameObjects = new GameObject[config.getNumberOfObjects()];
+
+        DataModel.getDataModel().getGameObjects(new BaseDataSource.LoadDataCallback<GameObject>() {
+            @Override
+            public void onDataLoaded(LinkedHashMap<String, GameObject> data) {
+                ArrayList<GameObject> availableGameObjects = new ArrayList<>(((LinkedHashMap<String, GameObject>) data.clone()).values());
+                for(int i = 0; i < config.getNumberOfObjects(); i++) {
+                    int randomIndex = (int) Math.random() * availableGameObjects.size();
+                    gameObjects[i] = availableGameObjects.get(randomIndex);
+                    availableGameObjects.remove(randomIndex);
+                }
+                gameObjectsLoadTaskCompletionSource.setResult(null);
+            }
+
+            @Override
+            public void onDataError() {
+                gameDataCallback.onDataError();
+                return;
+            }
+        });
+
+        Tasks.whenAll(gameCodeTask, gameObjectsLoadTask).addOnCompleteListener(new OnCompleteListener<Void>() {
+            @Override
+            public void onComplete(@NonNull Task<Void> task) {
+                DatabaseReference gameReference = databaseReference.child(gameCodeTask.getResult());
+                HashMap<String, Object> gameValues = new HashMap<>();
+
+                HashMap<String, Boolean> gameObjectIds = new HashMap<>();
+
+                for(GameObject gameObject : gameObjects) {
+                    gameObjectIds.put(gameObject.getId(), true);
+                }
+
+                gameValues.put(STATE, Game.State.WAITING.ordinal());
+                gameValues.put(CREATOR, DataModel.getDataModel().getUser().getId());
+                gameValues.put(OBJECTS, gameObjectIds);
+                gameReference.updateChildren(gameValues).addOnCompleteListener(new OnCompleteListener<Void>() {
+                    @Override
+                    public void onComplete(@NonNull Task<Void> task) {
+                        Game game = new Game(
+                                gameCodeTask.getResult(),
+                                Game.State.WAITING,
+                                gameObjects,
+                                DataModel.getDataModel().getUser().getId()
+                        );
+                        setCurrentGame(game, context);
+                        gameDataCallback.onDataLoaded(game);
+                    }
+                });
+            }
+        });
+
+    }
+
+    private void generateGameCode(final BaseDataSource.GetDataCallback<String> getGameCodeCallback) {
+        DatabaseReference databaseReference = getDatabaseReference();
+
+        final String key = String.valueOf((int)(Math.random()*9999));
+        Query keyQuery = databaseReference.child(key);
+
+        keyQuery.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                if(dataSnapshot.exists()) {
+                    generateGameCode(getGameCodeCallback);
+                } else {
+                    getGameCodeCallback.onDataLoaded(key);
+                }
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                getGameCodeCallback.onDataError();
+            }
+        });
     }
 
     private static DatabaseReference getDatabaseReference() {

@@ -22,7 +22,6 @@
         </com.google.android.flexbox.FlexboxLayout>
     </android.support.v4.widget.NestedScrollView>
 
-
     <TextView
         android:text="here"
         style="@style/TitleLabelStyle"

@@ -7,11 +7,15 @@ import java.util.ArrayList;
  */
 
 public class Game extends DataObject {
-    public class Config {
-        public final int mNumberOfObjects;
+    public static class Config {
+        private final int mNumberOfObjects;
 
         public Config(int numberOfObjects) {
             mNumberOfObjects = numberOfObjects;
+        }
+
+        public int getNumberOfObjects() {
+            return mNumberOfObjects;
         }
     }
 
@@ -29,5 +33,17 @@ public class Game extends DataObject {
         mState = state;
         mGameObjects = gameObjects;
         mCreator = creator;
+    }
+
+    public State getState() {
+        return mState;
+    }
+
+    public GameObject[] getGameObjects() {
+        return mGameObjects;
+    }
+
+    public String getCreator() {
+        return mCreator;
     }
 }

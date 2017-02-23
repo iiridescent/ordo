@@ -5,11 +5,11 @@ import com.base512.ordo.data.DataObject;
 import java.util.LinkedHashMap;
 
 public interface BaseDataSource {
-    interface LoadDataCallback<T extends DataObject> extends AccessDataCallback {
+    interface LoadDataCallback<T extends Object> extends AccessDataCallback {
         void onDataLoaded(LinkedHashMap<String, T> data);
     }
 
-    interface GetDataCallback<T extends DataObject> extends AccessDataCallback {
+    interface GetDataCallback<T extends Object> extends AccessDataCallback {
         void onDataLoaded(T data);
     }
 

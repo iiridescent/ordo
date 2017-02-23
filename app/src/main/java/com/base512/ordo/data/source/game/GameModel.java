@@ -22,6 +22,10 @@ public class GameModel {
         mGameRepository = new GameRepository();
     }
 
+    public void createGame(Game.Config gameConfig, BaseDataSource.GetDataCallback<Game> gameCreateDataCallback) {
+        mGameRepository.createGame(gameConfig, mContext, gameCreateDataCallback);
+    }
+
     public void getCurrentGame(BaseDataSource.GetDataCallback<Game> gameDataCallback) {
         if (mGame == null) {
             mGameRepository.getCurrentGame(mContext, gameDataCallback);
