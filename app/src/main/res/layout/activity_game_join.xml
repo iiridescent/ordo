@@ -2,16 +2,16 @@
 <android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/activity_lobby"
+    android:id="@+id/activity_join"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.base512.ordo.GameLobbyActivity">
+    tools:context="com.base512.ordo.GameJoinActivity">
 
     <TextView
         android:text="join game"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:id="@+id/lobbyLabel"
+        android:id="@+id/gameTestLabel"
         style="@style/TitleLabelStyle"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toTopOf="parent"
@@ -25,7 +25,7 @@
         android:background="@drawable/code_stroke"
         android:backgroundTint="@color/colorAccent"
         android:backgroundTintMode="src_in"
-        app:layout_constraintTop_toBottomOf="@+id/lobbyLabel"
+        app:layout_constraintTop_toBottomOf="@+id/gameTestLabel"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintLeft_toLeftOf="parent"
         android:id="@+id/gameCodeContainer">
@@ -77,7 +77,7 @@
         app:layout_constraintLeft_toLeftOf="parent"
         android:transitionName="@string/logo_transition_name"
         android:id="@+id/logoImage"
-        app:layout_constraintBottom_toBottomOf="@+id/lobbyLabel"
-        app:layout_constraintTop_toTopOf="@+id/lobbyLabel"/>
+        app:layout_constraintBottom_toBottomOf="@+id/gameTestLabel"
+        app:layout_constraintTop_toTopOf="@+id/gameTestLabel"/>
 
 </android.support.constraint.ConstraintLayout>
