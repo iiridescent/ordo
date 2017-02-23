@@ -2,6 +2,7 @@
 <android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
                 xmlns:tools="http://schemas.android.com/tools"
                 xmlns:app="http://schemas.android.com/apk/res-auto"
+                xmlns:ordo="http://schemas.android.com/apk/res-auto"
                 android:id="@+id/activity_game"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
@@ -37,9 +38,9 @@
             android:layout_alignParentTop="true"
             android:layout_centerHorizontal="true"
             android:id="@+id/creatorLabel"
-            tools:layout_editor_absoluteY="0dp"
-            android:layout_marginEnd="16dp"
+        android:layout_marginEnd="16dp"
             app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
             android:layout_marginStart="16dp"
             app:layout_constraintLeft_toLeftOf="parent"/>
 
@@ -53,5 +54,17 @@
             android:id="@+id/logoImage"
             app:layout_constraintBottom_toBottomOf="@+id/creatorLabel"
             app:layout_constraintTop_toTopOf="@+id/nestedScrollView"/>
+
+    <com.base512.ordo.ui.CounterView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/gameTimerView"
+        style="@style/CaptionLabelStyle"
+        ordo:separator=":"
+        ordo:padNumber="true"
+        app:layout_constraintBottom_toBottomOf="@+id/nestedScrollView"
+        app:layout_constraintLeft_toLeftOf="@+id/nestedScrollView"
+        android:layout_marginBottom="16dp"
+        android:layout_marginStart="16dp" />
 
 </android.support.constraint.ConstraintLayout>

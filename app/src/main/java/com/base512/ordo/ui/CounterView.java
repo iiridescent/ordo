@@ -8,13 +8,11 @@ public class CounterView extends TextView {
     private int mNumerator;
     private int mDenominator;
     public CounterView(Context context) {
-        super(context);
-        init();
+        this(context, null);
     }
 
     public CounterView(Context context, AttributeSet attrs) {
-        super(context, attrs);
-        init();
+        this(context, attrs, 0);
     }
 
     public CounterView(Context context, AttributeSet attrs, int defStyleAttr) {

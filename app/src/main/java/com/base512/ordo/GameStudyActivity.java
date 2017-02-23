@@ -1,9 +1,11 @@
 package com.base512.ordo;
 
+import com.base512.ordo.ui.CounterView;
 import com.google.android.flexbox.FlexboxLayout;
 
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
+import android.os.SystemClock;
 import android.support.graphics.drawable.AnimatedVectorDrawableCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.util.DisplayMetrics;
@@ -18,6 +20,8 @@ import com.base512.ordo.data.source.BaseDataSource;
 import com.base512.ordo.data.source.DataModel;
 import com.bumptech.glide.Glide;
 
+import java.sql.Time;
+
 public class GameStudyActivity extends OrdoActivity {
 
     // Game object container layout
@@ -25,6 +29,8 @@ public class GameStudyActivity extends OrdoActivity {
 
     // This label shows the keyCode of the game creator
     private TextView mCreatorLabel;
+
+    private CounterView mTimerView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -40,6 +46,8 @@ public class GameStudyActivity extends OrdoActivity {
         mCreatorLabel = (TextView) findViewById(R.id.creatorLabel);
 
         mCreatorLabel.setText(DataModel.getDataModel().getUser().getId());
+
+        mTimerView = (CounterView) findViewById(R.id.gameTimerView);
     }
 
     public void setupGame() {
@@ -109,4 +117,25 @@ public class GameStudyActivity extends OrdoActivity {
             }
         });
     }
+
+    private void updateTime() {
+
+    }
+
+    private void updateTimingRunnable(TimeUpdateRunnable runnable, long delay) {
+
+    }
+
+    private void removeTimingRunnable(TimeUpdateRunnable runnable) {
+
+    }
+
+    private final class TimeUpdateRunnable implements Runnable {
+        @Override
+        public void run() {
+            final long startTime = SystemClock.elapsedRealtime();
+
+        }
+    }
+
 }
