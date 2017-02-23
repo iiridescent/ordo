@@ -18,6 +18,7 @@ import com.base512.ordo.data.Game;
 import com.base512.ordo.data.GameObject;
 import com.base512.ordo.data.source.BaseDataSource;
 import com.base512.ordo.data.source.DataModel;
+import com.base512.ordo.util.ActivityUtils;
 import com.bumptech.glide.Glide;
 
 import java.sql.Time;
@@ -31,6 +32,8 @@ public class GameStudyActivity extends OrdoActivity {
     private TextView mCreatorLabel;
 
     private CounterView mTimerView;
+
+    private final TimeUpdateRunnable mTimeUpdateRunnable = new TimeUpdateRunnable();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -55,6 +58,7 @@ public class GameStudyActivity extends OrdoActivity {
             @Override
             public void onDataLoaded(Game game) {
                 mCreatorLabel.setText(game.getCreator());
+                updateTimingRunnable(mTimeUpdateRunnable, 0);
             }
 
             @Override
@@ -118,16 +122,43 @@ public class GameStudyActivity extends OrdoActivity {
         });
     }
 
-    private void updateTime() {
+    private void updateTime(long startTime) {
+        long timeElapsed = System.currentTimeMillis() - startTime;
+        int timeElapsedSeconds = (int) timeElapsed / 1000;
 
+        if(timeElapsedSeconds >= 5) {
+            removeTimingRunnable(mTimeUpdateRunnable);
+            goToTest();
+        }
+
+        mTimerView.setDenominator(timeElapsedSeconds);
     }
 
-    private void updateTimingRunnable(TimeUpdateRunnable runnable, long delay) {
-
+    private void updateTimingRunnable(TimeUpdateRunnable timeUpdateRunnable, long delay) {
+        if(delay > 0) {
+            mTimerView.postDelayed(timeUpdateRunnable, delay);
+        } else {
+            removeTimingRunnable(timeUpdateRunnable);
+            mTimerView.post(timeUpdateRunnable);
+        }
     }
 
-    private void removeTimingRunnable(TimeUpdateRunnable runnable) {
+    private void removeTimingRunnable(TimeUpdateRunnable timeUpdateRunnable) {
+        mTimerView.removeCallbacks(timeUpdateRunnable);
+    }
 
+    private void goToTest() {
+        DataModel.getDataModel().setGameState(Game.State.TEST, new BaseDataSource.UpdateDataCallback() {
+            @Override
+            public void onDataUpdated(String id) {
+                ActivityUtils.openActivity(GameStudyActivity.this, GameTestActivity.class);
+            }
+
+            @Override
+            public void onDataError() {
+
+            }
+        });
     }
 
     private final class TimeUpdateRunnable implements Runnable {
@@ -135,6 +166,26 @@ public class GameStudyActivity extends OrdoActivity {
         public void run() {
             final long startTime = SystemClock.elapsedRealtime();
 
+            DataModel.getDataModel().getCurrentGame(new BaseDataSource.GetDataCallback<Game>() {
+                @Override
+                public void onDataLoaded(Game data) {
+                    if (data.getState() == Game.State.STUDY) {
+                        updateTime(data.getStartTime());
+
+                        final int period = 25;
+
+                        final long endTime = SystemClock.elapsedRealtime();
+                        final long delay = Math.max(0, startTime + period - endTime);
+
+                        updateTimingRunnable(TimeUpdateRunnable.this, delay);
+                    }
+                }
+
+                @Override
+                public void onDataError() {
+                    // TODO Idk what to do here
+                }
+            });
         }
     }
 

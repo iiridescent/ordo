@@ -88,6 +88,10 @@ public class DataModel {
         mGameModel.createGame(gameConfig, gameCreateDataCallback);
     }
 
+    public void setGameState(Game.State state, BaseDataSource.UpdateDataCallback updateGameCallback) {
+        mGameModel.setGameState(state, updateGameCallback);
+    }
+
     public void setGuesses(UserGameGuesses userGameGuesses, BaseDataSource.UpdateDataCallback updateUserGameGuessesCallback) {
         mGameModel.setGuesses(userGameGuesses, updateUserGameGuessesCallback);
     }

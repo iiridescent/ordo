@@ -47,8 +47,10 @@
                 <action android:name="android.intent.action.MAIN" />
             </intent-filter>
         </activity>
-        <activity android:name=".GameTestActivity" />
-        <activity android:name=".GameResultsActivity">
+        <activity android:name=".GameTestActivity"
+                  android:theme="@style/AppTheme.NoActionBar"/>
+        <activity android:name=".GameResultsActivity"
+                  android:theme="@style/AppTheme.NoActionBar">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
             </intent-filter>
