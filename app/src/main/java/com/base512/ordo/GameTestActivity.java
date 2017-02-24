@@ -20,6 +20,7 @@ public class GameTestActivity extends OrdoActivity {
     private Button mNextButton;
     private ImageView mGuessButton;
     private EditText mGuessField;
+    private ImageView mReturnToMenu;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -32,7 +33,15 @@ public class GameTestActivity extends OrdoActivity {
         mNextButton = (Button) findViewById(R.id.gameTestResultsButton);
         mGuessButton = (ImageView) findViewById(R.id.gameTestGuessButton);
         mGuessField = (EditText) findViewById(R.id.gameTestGuessField);
+        mReturnToMenu = (ImageView) findViewById(R.id.logoImage);
 
+
+        mReturnToMenu.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                returnToMenu();
+            }
+        });
         mNextButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -72,6 +81,11 @@ public class GameTestActivity extends OrdoActivity {
 
     private void sendToResults() {
         Intent intent = new Intent(this, GameResultsActivity.class);
+        startActivity(intent);
+    }
+
+    private void returnToMenu() {
+        Intent intent = new Intent(this, MenuActivity.class);
         startActivity(intent);
     }
 }

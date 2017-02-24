@@ -3,6 +3,7 @@ package com.base512.ordo;
 import com.base512.ordo.ui.CounterView;
 import com.google.android.flexbox.FlexboxLayout;
 
+import android.content.Intent;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.os.SystemClock;
@@ -10,6 +11,7 @@ import android.support.graphics.drawable.AnimatedVectorDrawableCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.util.DisplayMetrics;
 import android.util.Log;
+import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -35,6 +37,8 @@ public class GameStudyActivity extends OrdoActivity {
 
     private final TimeUpdateRunnable mTimeUpdateRunnable = new TimeUpdateRunnable();
 
+    private ImageView mReturnToMenu;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -51,6 +55,15 @@ public class GameStudyActivity extends OrdoActivity {
         mCreatorLabel.setText(DataModel.getDataModel().getUser().getId());
 
         mTimerView = (CounterView) findViewById(R.id.gameTimerView);
+
+        mReturnToMenu = (ImageView) findViewById(R.id.logoImage);
+
+        mReturnToMenu.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                returnToMenu();
+            }
+        });
     }
 
     public void setupGame() {
@@ -187,6 +200,11 @@ public class GameStudyActivity extends OrdoActivity {
                 }
             });
         }
+    }
+
+    private void returnToMenu() {
+        Intent intent = new Intent(this, MenuActivity.class);
+        startActivity(intent);
     }
 
 }
