@@ -8,23 +8,6 @@
     tools:context="com.base512.ordo.GameResultsActivity">
 
     <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:inputType="number"
-            android:textAlignment="center"
-            android:textSize="80dp"
-            android:ems="10"
-            android:layout_centerHorizontal="true"
-            android:id="@+id/objectsCorrectlyEntered"
-            android:hint="17"
-            android:layout_marginTop="8dp"
-            android:layout_marginEnd="16dp"
-            app:layout_constraintRight_toRightOf="parent"
-            android:layout_marginStart="16dp"
-            app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/resultsLabel"/>
-
-    <TextView
             android:text="results"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -35,27 +18,38 @@
             app:layout_constraintLeft_toLeftOf="parent"/>
 
     <TextView
-        android:text="correct"
-        android:textSize="20dp"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignBottom="@+id/objectsCorrectlyEntered"
-        android:layout_centerHorizontal="true"
-        android:id="@+id/objectsText"
-        android:textAppearance="@style/TextAppearance.AppCompat.Body1"
-        app:layout_constraintTop_toTopOf="@+id/objectsCorrectlyEntered"
-        android:layout_marginTop="88dp"
-        android:layout_marginStart="16dp"
-        app:layout_constraintLeft_toLeftOf="parent"
-        android:layout_marginEnd="16dp"
-        app:layout_constraintRight_toRightOf="parent" />
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:inputType="number"
+            android:textAlignment="center"
+            android:layout_centerHorizontal="true"
+            android:id="@+id/resultsCorrectGuessesLabel"
+            style="@style/TextAppearance.GameCodeLabel"
+            tools:text="17"
+            android:layout_marginTop="8dp"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/resultsLabel"/>
+
+    <TextView
+            android:text="correct"
+            android:textSize="20dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignBottom="@+id/resultsCorrectGuessesLabel"
+            android:layout_centerHorizontal="true"
+            android:id="@+id/correctDescriptionLabel"
+            android:textAppearance="@style/CaptionLabelStyle"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/resultsCorrectGuessesLabel"/>
 
     <Button
         android:text="menu"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
-        android:layout_toStartOf="@+id/objectsText"
+        android:layout_toStartOf="@+id/correctDescriptionLabel"
         style="@style/MenuButton"
         android:id="@+id/sendToMenu"
         android:layout_marginEnd="16dp"
@@ -71,7 +65,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignTop="@+id/sendToMenu"
-        android:layout_toEndOf="@+id/objectsText"
+        android:layout_toEndOf="@+id/correctDescriptionLabel"
         style="@style/MenuButton"
         android:id="@+id/replayButton"
         android:layout_marginStart="16dp"

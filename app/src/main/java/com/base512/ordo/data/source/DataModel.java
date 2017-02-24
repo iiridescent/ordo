@@ -96,4 +96,7 @@ public class DataModel {
         mGameModel.setGuesses(userGameGuesses, updateUserGameGuessesCallback);
     }
 
+    public void getGuesses(BaseDataSource.GetDataCallback<UserGameGuesses> getUserGameGuessesCallback) {
+        mGameModel.getGuesses(getUserGameGuessesCallback);
+    }
 }

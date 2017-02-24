@@ -82,4 +82,23 @@ public class GameModel {
         mUserGameGuesses = userGameGuesses;
         mGameRepository.setGuesses(userGameGuesses, updateUserGameGuessesCallback);
     }
+
+    public void getGuesses(final BaseDataSource.GetDataCallback<UserGameGuesses> getUserGameGuessesCallback) {
+        if(mUserGameGuesses != null) {
+            getUserGameGuessesCallback.onDataLoaded(mUserGameGuesses);
+        } else {
+            mGameRepository.getGuesses(new BaseDataSource.GetDataCallback<UserGameGuesses>() {
+                @Override
+                public void onDataLoaded(UserGameGuesses data) {
+                    mUserGameGuesses = data;
+                    getUserGameGuessesCallback.onDataLoaded(data);
+                }
+
+                @Override
+                public void onDataError() {
+                    getUserGameGuessesCallback.onDataError();
+                }
+            });
+        }
+    }
 }

@@ -42,8 +42,16 @@
         <item name="android:textAppearance">@style/Base.TextAppearance.AppCompat.Subhead</item>
         <item name="android:fontFamily">sans-serif</item>
         <item name="android:textStyle">italic</item>
-        <item name="android:padding">10dp</item>
+        <item name="android:padding">8dp</item>
     </style>
+
+    <style name="GuessLabelStyle">
+        <item name="android:textAppearance">@style/Base.TextAppearance.AppCompat.Title</item>
+        <item name="android:paddingTop">8dp</item>
+        <item name="android:paddingBottom">8dp</item>
+        <item name="fontPath">fonts/Montserrat-Regular.ttf</item>
+    </style>
+
 
     <style name="TextAppearance.GameCodeLabel" parent="TextAppearance.AppCompat.Display4">
         <item name="fontPath">fonts/Montserrat-Thin.ttf</item>

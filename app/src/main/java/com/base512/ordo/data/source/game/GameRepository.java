@@ -18,6 +18,7 @@ import android.support.annotation.NonNull;
 
 import com.base512.ordo.data.Game;
 import com.base512.ordo.data.GameObject;
+import com.base512.ordo.data.User;
 import com.base512.ordo.data.UserGameGuesses;
 import com.base512.ordo.data.source.BaseDataSource;
 import com.base512.ordo.data.source.DataModel;
@@ -254,8 +255,37 @@ public class GameRepository implements GameDataSource {
     }
 
     @Override
-    public void getGuesses(@NonNull BaseDataSource.GetDataCallback<UserGameGuesses> userGameGuessesDataCallback) {
+    public void getGuesses(@NonNull final BaseDataSource.GetDataCallback<UserGameGuesses> userGameGuessesDataCallback) {
+        final DatabaseReference databaseReference = getDatabaseReference();
 
+        DataModel.getDataModel().getCurrentGame(new BaseDataSource.GetDataCallback<Game>() {
+            @Override
+            public void onDataLoaded(final Game game) {
+                final User user = DataModel.getDataModel().getUser();
+
+                Query userGameGuessesQuery = databaseReference.child(GUESSES).child(game.getId()).child(user.getId());
+                userGameGuessesQuery.addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(DataSnapshot dataSnapshot) {
+                        ArrayList<String> guesses = new ArrayList<>();
+                        for(DataSnapshot child : dataSnapshot.getChildren()) {
+                            guesses.add(child.getKey());
+                        }
+                        userGameGuessesDataCallback.onDataLoaded(new UserGameGuesses(user.getId(), game.getId(), guesses));
+                    }
+
+                    @Override
+                    public void onCancelled(DatabaseError databaseError) {
+                        userGameGuessesDataCallback.onDataError();
+                    }
+                });
+            }
+
+            @Override
+            public void onDataError() {
+                userGameGuessesDataCallback.onDataError();
+            }
+        });
     }
 
     @Override
@@ -278,19 +308,6 @@ public class GameRepository implements GameDataSource {
                 }
             }
         });
-
-        /*Query userGameGuessesQuery = databaseReference.child(GUESSES).child(userGameGuesses.getGameId()).child(userGameGuesses.getUserId());
-        userGameGuessesQuery.addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-
-            }
-
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-                updateUserGameGuessesCallback.onDataError();
-            }
-        });*/
     }
 
     private void generateGameCode(final BaseDataSource.GetDataCallback<String> getGameCodeCallback) {
