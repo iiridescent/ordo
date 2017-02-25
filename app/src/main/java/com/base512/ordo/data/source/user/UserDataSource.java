@@ -15,5 +15,5 @@ public interface UserDataSource {
 
     void setHighScore(@NonNull String keyCode, int highScore, @NonNull Context context, @NonNull BaseDataSource.UpdateDataCallback updateUserCallback);
 
-    void addGamesPlayed(@NonNull String keyCode, int additionalGamesPlayed, @NonNull Context context, @NonNull BaseDataSource.UpdateDataCallback updateUserCallback);
+    void addGamesPlayed(@NonNull String keyCode, @NonNull Context context, @NonNull BaseDataSource.UpdateDataCallback updateUserCallback);
 }

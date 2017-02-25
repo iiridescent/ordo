@@ -14,17 +14,19 @@ import com.base512.ordo.data.GameObject;
 import com.base512.ordo.data.UserGameGuesses;
 import com.base512.ordo.data.source.BaseDataSource;
 import com.base512.ordo.data.source.DataModel;
+import com.base512.ordo.util.ActivityUtils;
 
 import uk.co.chrisjenx.calligraphy.CalligraphyConfig;
 import uk.co.chrisjenx.calligraphy.CalligraphyUtils;
 
-public class GameResultsActivity extends OrdoActivity {
+public class GameResultsActivity extends BaseGameActivity {
 
     private Button mMenuButton;
     private Button mReplayButton;
-    private ImageView mReturnToMenu;
     private TextView mCorrectGuessesLabel;
     private TextView mCorrectDescriptionLabel;
+    private TextView mHighScoreLabel;
+    private TextView mHighScoreDescriptionLabel;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -36,27 +38,22 @@ public class GameResultsActivity extends OrdoActivity {
 
     private void setupViews() {
         mMenuButton = (Button) findViewById(R.id.sendToMenu);
-        mReturnToMenu = (ImageView) findViewById(R.id.logoImage);
         mReplayButton = (Button) findViewById(R.id.replayButton);
         mCorrectGuessesLabel = (TextView) findViewById(R.id.resultsCorrectGuessesLabel);
         mCorrectDescriptionLabel = (TextView) findViewById(R.id.correctDescriptionLabel);
+        mHighScoreLabel = (TextView) findViewById(R.id.resultsHighScoreLabel);
+        mHighScoreDescriptionLabel = (TextView) findViewById(R.id.highScoreDescriptionLabel) ;
 
-        mReturnToMenu.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                sendToMenu();
-            }
-        });
         mReplayButton.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View v) {
+            public void onClick(View view) {
                 replayGame();
             }
         });
         mMenuButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                sendToMenu();
+                goToMenu();
             }
         });
     }
@@ -78,15 +75,21 @@ public class GameResultsActivity extends OrdoActivity {
                             }
                             correctGuesses = correct ? correctGuesses + 1 : correctGuesses;
                         }
-                        mCorrectGuessesLabel.setText(String.valueOf(correctGuesses));
 
-                        if (correctGuesses > DataModel.getDataModel().getUser().getHighScore()) {
-                            DataModel.getDataModel().setHighScore(correctGuesses);
+                        int lastHighScore = DataModel.getDataModel().getUser().getHighScore();
+
+                        mCorrectGuessesLabel.setText(String.valueOf(correctGuesses));
+                        mHighScoreLabel.setText(String.valueOf(lastHighScore));
+
+                        if (correctGuesses > lastHighScore) {
+                            DataModel.getDataModel().setHighScore(correctGuesses, null);
 
                             mCorrectDescriptionLabel.setText("new high score");
-                        } else {
-
+                            mHighScoreDescriptionLabel.setText("last high score");
                         }
+
+                        DataModel.getDataModel().incrementGamesPlayed(null);
+                        DataModel.getDataModel().setGameState(Game.State.FINISHED, null);
                     }
 
                     @Override
@@ -106,11 +109,12 @@ public class GameResultsActivity extends OrdoActivity {
     private void replayGame() {
         Intent intent = new Intent(this, GameCreateActivity.class);
         startActivity(intent);
+        requestFinish();
     }
 
-    private void sendToMenu() {
-        Intent intent = new Intent(this, MenuActivity.class);
-        startActivity(intent);
+    @Override
+    protected void exit() {
+        goToMenu();
     }
 
 }

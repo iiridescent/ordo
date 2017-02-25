@@ -12,12 +12,19 @@ public class Game extends DataObject {
     public static class Config {
         private final int mNumberOfObjects;
 
-        public Config(int numberOfObjects) {
+        private final int mStudyDuration;
+
+        public Config(int numberOfObjects, int studyDuration) {
             mNumberOfObjects = numberOfObjects;
+            mStudyDuration = studyDuration;
         }
 
         public int getNumberOfObjects() {
             return mNumberOfObjects;
+        }
+
+        public int getStudyDuration() {
+            return mStudyDuration;
         }
     }
 
@@ -31,13 +38,16 @@ public class Game extends DataObject {
 
     private final long mStartTime;
 
-    public Game(String id, State state, GameObject[] gameObjects, String creator, long startTime) {
+    private final int mStudyDuration;
+
+    public Game(String id, State state, GameObject[] gameObjects, String creator, long startTime, int studyDuration) {
         super(id);
 
         mState = state;
         mGameObjects = gameObjects;
         mCreator = creator;
         mStartTime = startTime;
+        mStudyDuration = studyDuration;
     }
 
     public State getState() {
@@ -56,6 +66,8 @@ public class Game extends DataObject {
         return mStartTime;
     }
 
+    public int getStudyDuration() { return mStudyDuration; }
+
     public Game withState(State state) {
         long startTime;
         if(state == State.STUDY) {
@@ -64,6 +76,6 @@ public class Game extends DataObject {
             startTime = Long.MIN_VALUE;
         }
 
-        return new Game(getId(), state, mGameObjects, mCreator, startTime);
+        return new Game(getId(), state, mGameObjects, mCreator, startTime, mStudyDuration);
     }
 }

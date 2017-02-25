@@ -22,39 +22,12 @@
                 xmlns:app="http://schemas.android.com/apk/res-auto"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:paddingTop="72dp"
                 android:id="@+id/study_row_container"
                 app:flexWrap="wrap"
                 app:alignItems="stretch"
                 app:alignContent="stretch">
         </com.google.android.flexbox.FlexboxLayout>
     </android.support.v4.widget.NestedScrollView>
-
-    <TextView
-            tools:text="game creator id"
-            style="@style/TitleLabelStyle"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentTop="true"
-            android:layout_centerHorizontal="true"
-            android:id="@+id/creatorLabel"
-        android:layout_marginEnd="16dp"
-            app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            android:layout_marginStart="16dp"
-            app:layout_constraintLeft_toLeftOf="parent"/>
-
-    <ImageView
-            android:layout_width="40dp"
-            android:layout_height="40dp"
-            app:srcCompat="@drawable/ic_memory_black_24dp"
-            android:layout_marginStart="16dp"
-            android:layout_marginTop="2dp"
-            app:layout_constraintLeft_toLeftOf="parent"
-            android:id="@+id/logoImage"
-            app:layout_constraintBottom_toBottomOf="@+id/creatorLabel"
-            app:layout_constraintTop_toTopOf="@+id/nestedScrollView"/>
-
     <com.base512.ordo.ui.CounterView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"

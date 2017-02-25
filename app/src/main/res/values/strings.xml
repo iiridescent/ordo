@@ -4,4 +4,10 @@
     <string name="new_game">new game</string>
     <string name="join_game">join game</string>
     <string name="logo_transition_name">logo</string>
+    <string name="create_activity_label">create game</string>
+    <string name="join_activity_label">join game</string>
+    <string name="lobby_activity_label">lobby</string>
+    <string name="study_activity_label">study</string>
+    <string name="test_activity_label">evaluation</string>
+    <string name="results_activity_label">results</string>
 </resources>

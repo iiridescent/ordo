@@ -1,83 +1,74 @@
 <?xml version="1.0" encoding="utf-8"?>
 <android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/activity_join"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    tools:context="com.base512.ordo.GameJoinActivity">
+                                             xmlns:app="http://schemas.android.com/apk/res-auto"
+                                             xmlns:tools="http://schemas.android.com/tools"
+                                             android:id="@+id/activity_join"
+                                             android:layout_width="match_parent"
+                                             android:layout_height="match_parent"
+                                             tools:context="com.base512.ordo.GameJoinActivity">
 
     <TextView
-        android:text="join game"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/gameTestLabel"
-        style="@style/TitleLabelStyle"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintLeft_toLeftOf="parent"/>
-
-    <LinearLayout
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:paddingLeft="30dp"
-        android:paddingRight="30dp"
-        android:background="@drawable/code_stroke"
-        android:backgroundTint="@color/colorAccent"
-        android:backgroundTintMode="src_in"
-        app:layout_constraintTop_toBottomOf="@+id/gameTestLabel"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintLeft_toLeftOf="parent"
-        android:id="@+id/gameCodeContainer">
-
-        <TextView
-            android:textAppearance="@style/TextAppearance.GameCodeLabel"
-            tools:text="0000"
-            android:textAllCaps="true"
-            android:layout_height="wrap_content"
+            android:text="game code"
             android:layout_width="wrap_content"
-            android:textIsSelectable="true"
-            android:maxLength="4"
-            android:id="@+id/joinGameCodeLabel"/>
-    </LinearLayout>
-
-    <TextView
-        android:text="game code"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/gameCodeInform"
-        style="@style/CaptionLabelStyle"
-        android:layout_marginEnd="16dp"
-        app:layout_constraintRight_toRightOf="parent"
-        android:layout_marginStart="16dp"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/gameCodeContainer"
-        android:layout_marginTop="8dp"/>
+            android:layout_height="wrap_content"
+            android:id="@+id/gameCodeInform"
+            style="@style/CaptionLabelStyle"
+            android:layout_marginEnd="16dp"
+            app:layout_constraintRight_toRightOf="parent"
+            android:layout_marginStart="16dp"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/gameCodeContainer"
+            android:layout_marginTop="8dp"/>
 
     <Button
-        android:text="exit"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        style="@style/MenuButton"
-        android:id="@+id/gameExitButton"
-        android:layout_marginStart="16dp"
-        app:layout_constraintLeft_toLeftOf="parent"
-        android:layout_marginEnd="16dp"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintBottom_toBottomOf="parent"
-        android:layout_marginBottom="32dp"/>
+            android:text="exit"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            style="@style/MenuButton"
+            android:id="@+id/gameExitButton"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            android:layout_marginBottom="32dp"
+            app:layout_constraintHorizontal_bias="0.25"/>
 
+    <Button
+            android:text="join"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            style="@style/MenuButton"
+            android:id="@+id/gameJoinButton"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            android:layout_marginBottom="32dp"
+            app:layout_constraintHorizontal_bias="0.75"/>
 
-    <ImageView
-        android:layout_width="40dp"
-        android:layout_height="40dp"
-        android:layout_marginTop="2dp"
-        app:srcCompat="@drawable/ic_memory_black_24dp"
-        android:layout_marginStart="16dp"
-        app:layout_constraintLeft_toLeftOf="parent"
-        android:transitionName="@string/logo_transition_name"
-        android:id="@+id/logoImage"
-        app:layout_constraintBottom_toBottomOf="@+id/gameTestLabel"
-        app:layout_constraintTop_toTopOf="@+id/gameTestLabel"/>
+    <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingLeft="30dp"
+            android:paddingRight="30dp"
+            android:background="@drawable/code_stroke"
+            android:backgroundTint="@color/colorAccent"
+            android:backgroundTintMode="src_in"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintLeft_toLeftOf="parent"
+            android:id="@+id/gameCodeContainer"
+            app:layout_constraintTop_toTopOf="parent">
+        <EditText
+                android:textAppearance="@style/TextAppearance.GameCodeLabel"
+                android:background="@android:color/transparent"
+                android:maxLength="4"
+                android:inputType="number"
+                android:textAlignment="center"
+                android:nextFocusForward="@+id/joinGameButton"
+                android:imeOptions="actionGo"
+                android:minWidth="248dp"
+                android:layout_height="wrap_content"
+                android:layout_width="wrap_content"
+                android:id="@+id/joinGameCodeLabel"/>
+    </LinearLayout>
+
 
 </android.support.constraint.ConstraintLayout>

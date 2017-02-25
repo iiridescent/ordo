@@ -52,4 +52,12 @@ public class UserModel {
         mUser = user;
     }
 
+    public void setHighScore(int highScore, BaseDataSource.UpdateDataCallback updateHighScoreCallback) {
+        mUserRepository.setHighScore(getUser().getId(), highScore, mContext, updateHighScoreCallback);
+    }
+
+    public void incrementGamesPlayed(BaseDataSource.UpdateDataCallback updateGamesPlayedCallback) {
+        mUserRepository.addGamesPlayed(getUser().getId(), mContext, updateGamesPlayedCallback);
+    }
+
 }

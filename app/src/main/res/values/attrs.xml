@@ -6,4 +6,11 @@
         <attr name="padNumber" format="boolean"/>
     </declare-styleable>
 
+    <declare-styleable name="NumberConfigView">
+        <attr name="labelText" format="string"/>
+        <attr name="defaultValue" format="integer"/>
+        <attr name="minValue" format="integer"/>
+        <attr name="maxValue" format="integer"/>
+    </declare-styleable>
+
 </resources>

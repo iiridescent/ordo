@@ -10,18 +10,15 @@ import android.widget.ImageView;
 import com.base512.ordo.data.Game;
 import com.base512.ordo.data.source.BaseDataSource;
 import com.base512.ordo.data.source.DataModel;
+import com.base512.ordo.ui.NumberConfigView;
+import com.base512.ordo.util.ActivityUtils;
 
-public class GameCreateActivity extends OrdoActivity {
+public class GameCreateActivity extends BaseGameActivity {
 
-    private ImageView mAddToNumber;
-
-    private ImageView mSubtractFromNumber;
-
-    private EditText mNumberBox;
+    private NumberConfigView mGameObjectsField;
+    private NumberConfigView mGameDurationField;
 
     private Button mCreateButton;
-
-    private ImageView mReturnToMenu;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -33,58 +30,27 @@ public class GameCreateActivity extends OrdoActivity {
 
     public void setupViews() {
         mCreateButton = (Button) findViewById(R.id.createButton);
-        mNumberBox = (EditText) findViewById(R.id.numberOfPictures);
-        mAddToNumber = (ImageView) findViewById(R.id.addToNumber);
-        mSubtractFromNumber = (ImageView) findViewById(R.id.subtractFromNumber);
-        mReturnToMenu = (ImageView) findViewById(R.id.logoImage);
+        mGameObjectsField = (NumberConfigView) findViewById(R.id.gameCreateObjectsField);
+        mGameDurationField = (NumberConfigView) findViewById(R.id.gameCreateDurationField);
 
-        mReturnToMenu.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                returnToMenu();
-            }
-        });
         mCreateButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 setupGameAndGoToLobby();
             }
         });
-        mSubtractFromNumber.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                subtractFromNumber();
-            }
-        });
-        mAddToNumber.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                addToNumber();
-            }
-        });
-    }
-
-    public void addToNumber() {
-        String getFromNumberBox = mNumberBox.getText().toString();
-        int numberBoxInteger = Integer.valueOf(getFromNumberBox);
-
-        mNumberBox.setText(String.valueOf(numberBoxInteger + 1));
-    }
-
-    private void subtractFromNumber() {
-        String getFromNumberBox = mNumberBox.getText().toString();
-        int numberBoxInteger = Integer.valueOf(getFromNumberBox);
-
-        mNumberBox.setText(String.valueOf(numberBoxInteger - 1));
     }
 
     private void setupGameAndGoToLobby() {
-        int numberOfObjects = Integer.valueOf(mNumberBox.getText().toString());
+        int numberOfObjects = mGameObjectsField.getValue();
+        int studyDuration = mGameDurationField.getValue();
 
-        Game.Config gameConfig = new Game.Config(numberOfObjects);
+        Game.Config gameConfig = new Game.Config(numberOfObjects, studyDuration);
+        setLoadingState(true);
         DataModel.getDataModel().createGame(gameConfig, new BaseDataSource.GetDataCallback<Game>() {
             @Override
             public void onDataLoaded(Game data) {
+                setLoadingState(false);
                 goToLobby();
             }
 
@@ -95,14 +61,14 @@ public class GameCreateActivity extends OrdoActivity {
         });
     }
 
+    @Override
+    protected void exit() {
+        goToMenu();
+    }
+
     private void goToLobby() {
         Intent intent = new Intent(this, GameLobbyActivity.class);
         startActivity(intent);
+        requestFinish();
     }
-
-    private void returnToMenu() {
-        Intent intent = new Intent(this, MenuActivity.class);
-        startActivity(intent);
-    }
-
 }

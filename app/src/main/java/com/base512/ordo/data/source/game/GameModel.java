@@ -6,11 +6,13 @@ import com.base512.ordo.data.Game;
 import com.base512.ordo.data.UserGameGuesses;
 import com.base512.ordo.data.source.BaseDataSource;
 
+import java.util.ArrayList;
+
 /**
  * Created by Thomas on 2/22/2017.
  */
 
-public class GameModel {
+public class GameModel implements GameRepository.OnGameStateChangeListener{
     private final Context mContext;
 
     /** The current state of the game. */
@@ -20,9 +22,15 @@ public class GameModel {
 
     private GameRepository mGameRepository;
 
+    private ArrayList<GameRepository.OnGameStateChangeListener> mOnGameStateChangeListeners;
+
+    private ArrayList<GameRepository.OnGameRosterChangeListener> mOnGameRosterChangeListeners;
+
     public GameModel(Context context) {
         mContext = context;
         mGameRepository = new GameRepository();
+        mOnGameStateChangeListeners = new ArrayList<>();
+        mOnGameRosterChangeListeners = new ArrayList<>();
     }
 
     public void createGame(Game.Config gameConfig, BaseDataSource.GetDataCallback<Game> gameCreateDataCallback) {
@@ -68,14 +76,15 @@ public class GameModel {
         }
     }
 
-    public void saveGame(Game game) {
-        mGameRepository.setCurrentGame(game, mContext, null);
+    public void setCurrentGame(Game game, BaseDataSource.UpdateDataCallback updateGameCallback) {
+        mGameRepository.setCurrentGame(game, mContext, updateGameCallback);
+        mGameRepository.setOnGameStateChangeListener(this);
     }
 
     public void setGameState(Game.State state, final BaseDataSource.UpdateDataCallback updateGameCallback) {
         Game game = mGame.withState(state);
         mGameRepository.setCurrentGame(game, mContext, updateGameCallback);
-        mGame = game;
+        mGame = state == Game.State.FINISHED ? null : game;
     }
 
     public void setGuesses(UserGameGuesses userGameGuesses, BaseDataSource.UpdateDataCallback updateUserGameGuessesCallback) {
@@ -99,6 +108,17 @@ public class GameModel {
                     getUserGameGuessesCallback.onDataError();
                 }
             });
+        }
+    }
+
+    public void addOnGameStateChangedListener(GameRepository.OnGameStateChangeListener onGameStateChangeListener) {
+        mOnGameStateChangeListeners.add(onGameStateChangeListener);
+    }
+
+    @Override
+    public void onStateChanged(Game.State newState) {
+        for(GameRepository.OnGameStateChangeListener onGameStateChangeListener : mOnGameStateChangeListeners) {
+            onGameStateChangeListener.onStateChanged(newState);
         }
     }
 }

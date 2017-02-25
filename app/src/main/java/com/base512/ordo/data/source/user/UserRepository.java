@@ -95,12 +95,37 @@ final class UserRepository implements UserDataSource {
 
     @Override
     public void setHighScore(@NonNull String keyCode, int highScore, Context context, @NonNull BaseDataSource.UpdateDataCallback updateUserCallback) {
+        DatabaseReference highScoreReference = getDatabaseReference().child(keyCode).child(HIGH_SCORE);
+        highScoreReference.setValue(highScore);
 
+        setSavedUser(context, getSavedUser(context).withHighScore(highScore));
+
+        if(updateUserCallback != null) {
+            updateUserCallback.onDataUpdated(keyCode);
+        }
     }
 
     @Override
-    public void addGamesPlayed(@NonNull String keyCode, int additionalGamesPlayed, Context context, @NonNull BaseDataSource.UpdateDataCallback updateUserCallback) {
+    public void addGamesPlayed(@NonNull final String keyCode, final Context context, @NonNull final BaseDataSource.UpdateDataCallback updateUserCallback) {
+        final DatabaseReference gamesPlayedReference = getDatabaseReference().child(keyCode).child(GAMES_PLAYED);
+        gamesPlayedReference.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                int gamesPlayed = dataSnapshot.getValue(Integer.class) + 1;
+                gamesPlayedReference.setValue(gamesPlayed);
 
+                setSavedUser(context, getSavedUser(context).withGamesPlayed(gamesPlayed));
+
+                if(updateUserCallback != null) {
+                    updateUserCallback.onDataUpdated(keyCode);
+                }
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
     }
 
     private static DatabaseReference getDatabaseReference() {

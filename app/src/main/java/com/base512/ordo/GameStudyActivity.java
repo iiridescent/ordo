@@ -4,17 +4,14 @@ import com.base512.ordo.ui.CounterView;
 import com.google.android.flexbox.FlexboxLayout;
 
 import android.content.Intent;
-import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.os.SystemClock;
 import android.support.graphics.drawable.AnimatedVectorDrawableCompat;
-import android.support.v7.app.AppCompatActivity;
 import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.base512.ordo.data.Game;
 import com.base512.ordo.data.GameObject;
@@ -23,26 +20,19 @@ import com.base512.ordo.data.source.DataModel;
 import com.base512.ordo.util.ActivityUtils;
 import com.bumptech.glide.Glide;
 
-import java.sql.Time;
-
-public class GameStudyActivity extends OrdoActivity {
+public class GameStudyActivity extends BaseGameActivity {
 
     // Game object container layout
     private FlexboxLayout mContainerLayout;
-
-    // This label shows the keyCode of the game creator
-    private TextView mCreatorLabel;
 
     private CounterView mTimerView;
 
     private final TimeUpdateRunnable mTimeUpdateRunnable = new TimeUpdateRunnable();
 
-    private ImageView mReturnToMenu;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_game);
+        setContentView(R.layout.activity_game_study);
         setupViews();
         setupGame();
         displayRows();
@@ -50,27 +40,17 @@ public class GameStudyActivity extends OrdoActivity {
 
     public void setupViews() {
         mContainerLayout = (FlexboxLayout) findViewById(R.id.study_row_container);
-        mCreatorLabel = (TextView) findViewById(R.id.creatorLabel);
-
-        mCreatorLabel.setText(DataModel.getDataModel().getUser().getId());
 
         mTimerView = (CounterView) findViewById(R.id.gameTimerView);
-
-        mReturnToMenu = (ImageView) findViewById(R.id.logoImage);
-
-        mReturnToMenu.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                returnToMenu();
-            }
-        });
     }
 
     public void setupGame() {
         DataModel.getDataModel().getCurrentGame(new BaseDataSource.GetDataCallback<Game>() {
             @Override
             public void onDataLoaded(Game game) {
-                mCreatorLabel.setText(game.getCreator());
+                if(!DataModel.getDataModel().getUser().getId().equals(game.getCreator())) {
+                    setLabel("game by "+game.getCreator());
+                }
                 updateTimingRunnable(mTimeUpdateRunnable, 0);
             }
 
@@ -137,12 +117,22 @@ public class GameStudyActivity extends OrdoActivity {
 
     private void updateTime(long startTime) {
         long timeElapsed = System.currentTimeMillis() - startTime;
-        int timeElapsedSeconds = (int) timeElapsed / 1000;
+        final int timeElapsedSeconds = (int) timeElapsed / 1000;
 
-        if(timeElapsedSeconds >= 5) {
-            removeTimingRunnable(mTimeUpdateRunnable);
-            goToTest();
-        }
+        DataModel.getDataModel().getCurrentGame(new BaseDataSource.GetDataCallback<Game>() {
+            @Override
+            public void onDataLoaded(Game data) {
+                if(timeElapsedSeconds >= data.getStudyDuration()) {
+                    removeTimingRunnable(mTimeUpdateRunnable);
+                    goToTest();
+                }
+            }
+
+            @Override
+            public void onDataError() {
+
+            }
+        });
 
         mTimerView.setDenominator(timeElapsedSeconds);
     }
@@ -165,6 +155,7 @@ public class GameStudyActivity extends OrdoActivity {
             @Override
             public void onDataUpdated(String id) {
                 ActivityUtils.openActivity(GameStudyActivity.this, GameTestActivity.class);
+                requestFinish();
             }
 
             @Override
@@ -201,10 +192,4 @@ public class GameStudyActivity extends OrdoActivity {
             });
         }
     }
-
-    private void returnToMenu() {
-        Intent intent = new Intent(this, MenuActivity.class);
-        startActivity(intent);
-    }
-
 }

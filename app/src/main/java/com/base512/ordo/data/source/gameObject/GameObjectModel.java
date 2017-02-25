@@ -23,10 +23,11 @@ public class GameObjectModel {
     public GameObjectModel(Context context) {
         mContext = context;
         mGameObjectRepository = new GameObjectRepository();
+        mGameObjects = new LinkedHashMap<>();
     }
 
     public void getGameObject(String id, BaseDataSource.GetDataCallback<GameObject> gameObjectDataCallback) {
-        if(mGameObjects.get(id) == null) {
+        if(mGameObjects == null || mGameObjects.get(id) == null) {
             mGameObjectRepository.getGameObject(id, gameObjectDataCallback);
         } else {
             gameObjectDataCallback.onDataLoaded(mGameObjects.get(id));
@@ -34,7 +35,7 @@ public class GameObjectModel {
     }
 
     public void loadGameObjects(final BaseDataSource.LoadDataCallback<GameObject> gameObjectsLoadDataCallback) {
-        if(mGameObjects == null) {
+        if(mGameObjects == null || mGameObjects.size() == 0) {
             mGameObjectRepository.loadGameObjects(new BaseDataSource.LoadDataCallback<GameObject>() {
                 @Override
                 public void onDataLoaded(LinkedHashMap<String, GameObject> gameObjects) {

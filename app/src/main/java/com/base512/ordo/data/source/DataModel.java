@@ -1,13 +1,13 @@
 package com.base512.ordo.data.source;
 
 import android.content.Context;
-import android.graphics.drawable.Drawable;
 
 import com.base512.ordo.data.Game;
 import com.base512.ordo.data.GameObject;
 import com.base512.ordo.data.User;
 import com.base512.ordo.data.UserGameGuesses;
 import com.base512.ordo.data.source.game.GameModel;
+import com.base512.ordo.data.source.game.GameRepository;
 import com.base512.ordo.data.source.gameObject.GameObjectModel;
 import com.base512.ordo.data.source.user.UserModel;
 
@@ -60,12 +60,12 @@ public class DataModel {
         mUserModel.getUser(keyCode, userDataCallback);
     }
 
-    public void setHighScore(int highScore) {
-        mUserModel.saveUser(getUser().withHighScore(highScore));
+    public void setHighScore(int highScore, BaseDataSource.UpdateDataCallback updateHighScoreCallback) {
+        mUserModel.setHighScore(highScore, updateHighScoreCallback);
     }
 
-    public void setGamesPlayed(int gamesPlayed) {
-        mUserModel.saveUser(getUser().withGamesPlayed(gamesPlayed));
+    public void incrementGamesPlayed(BaseDataSource.UpdateDataCallback updateGamesPlayedCallback) {
+        mUserModel.incrementGamesPlayed(updateGamesPlayedCallback);
     }
 
     public void getGameObject(String id, BaseDataSource.GetDataCallback<GameObject> gameObjectDataCallback) {
@@ -84,8 +84,20 @@ public class DataModel {
         mGameModel.getCurrentGame(gameDataCallback);
     }
 
+    public void getGame(String id, BaseDataSource.GetDataCallback<Game> gameGetDataCallback) {
+        mGameModel.getGame(id, gameGetDataCallback);
+    }
+
     public void createGame(Game.Config gameConfig, BaseDataSource.GetDataCallback<Game> gameCreateDataCallback) {
         mGameModel.createGame(gameConfig, gameCreateDataCallback);
+    }
+
+    public void joinGame(Game game, BaseDataSource.UpdateDataCallback gameJoinCallback) {
+        mGameModel.setCurrentGame(game, gameJoinCallback);
+    }
+
+    public void addOnGameStateChangeListener(GameRepository.OnGameStateChangeListener onGameStateChangeListener) {
+        mGameModel.addOnGameStateChangedListener(onGameStateChangeListener);
     }
 
     public void setGameState(Game.State state, BaseDataSource.UpdateDataCallback updateGameCallback) {

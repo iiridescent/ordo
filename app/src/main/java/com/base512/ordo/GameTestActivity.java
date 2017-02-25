@@ -4,6 +4,8 @@ import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.view.menu.ExpandedMenuView;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.inputmethod.EditorInfo;
@@ -26,17 +28,18 @@ import uk.co.chrisjenx.calligraphy.CalligraphyUtils;
 
 import java.util.ArrayList;
 
-public class GameTestActivity extends OrdoActivity {
+public class GameTestActivity extends BaseGameActivity {
 
     private Button mNextButton;
     private ImageView mGuessButton;
     private EditText mGuessField;
-    private ImageView mReturnToMenu;
 
     private LinearLayout mGuessContainer;
     private CounterView mGuessCounter;
 
     private ArrayList<String> mGuesses;
+
+    private boolean mWasEdited = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -50,20 +53,13 @@ public class GameTestActivity extends OrdoActivity {
         mNextButton = (Button) findViewById(R.id.gameTestResultsButton);
         mGuessButton = (ImageView) findViewById(R.id.gameTestGuessButton);
         mGuessField = (EditText) findViewById(R.id.gameTestGuessField);
-        mReturnToMenu = (ImageView) findViewById(R.id.logoImage);
         mGuessCounter = (CounterView) findViewById(R.id.testCounterView);
         mGuessContainer = (LinearLayout) findViewById(R.id.gameTestGuessContainer);
 
-        mReturnToMenu.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                returnToMenu();
-            }
-        });
         mNextButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                sendToResults();
+                finishTest();
             }
         });
         mGuessButton.setOnClickListener(new View.OnClickListener() {
@@ -78,10 +74,44 @@ public class GameTestActivity extends OrdoActivity {
             public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
                 boolean handled = false;
                 if (actionId == EditorInfo.IME_ACTION_DONE) {
-                    guess();
+                    if(!mGuessField.getText().toString().isEmpty() && !mGuessField.getText().toString().equals(" ")) {
+                        guess();
+                    }
                     handled = true;
                 }
                 return handled;
+            }
+        });
+
+        mGuessField.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+                if(charSequence.toString().isEmpty()) {
+                    mGuessButton.setEnabled(false);
+                    mGuessField.setImeOptions(EditorInfo.IME_ACTION_NONE);
+                } else {
+                    mGuessButton.setEnabled(true);
+                    mGuessField.setImeOptions(EditorInfo.IME_ACTION_DONE);
+                }
+            }
+
+            @Override
+            public void afterTextChanged(Editable editable) {
+                if (mWasEdited){
+                    mWasEdited = false;
+                    return;
+                }
+
+                if(editable.toString().equals(" ")) {
+                    mGuessField.setText("");
+                }
+
+                mWasEdited = true;
             }
         });
     }
@@ -126,25 +156,38 @@ public class GameTestActivity extends OrdoActivity {
                 mGuessField.setText("");
 
                 if(mGuesses.size() == data.getGameObjects().length) {
-                    mGuessButton.setEnabled(false);
-                    mGuessField.setEnabled(false);
-                    mGuessField.clearFocus();
-
-                    String userId = DataModel.getDataModel().getUser().getId();
-                    String gameId = data.getId();
-
-                    DataModel.getDataModel().setGuesses(new UserGameGuesses(userId, gameId, mGuesses), new BaseDataSource.UpdateDataCallback() {
-                        @Override
-                        public void onDataUpdated(String id) {
-                            sendToResults();
-                        }
-
-                        @Override
-                        public void onDataError() {
-
-                        }
-                    });
+                    finishTest();
                 }
+            }
+
+            @Override
+            public void onDataError() {
+
+            }
+        });
+    }
+
+    private void finishTest() {
+        mGuessButton.setEnabled(false);
+        mGuessField.setEnabled(false);
+        mNextButton.setEnabled(false);
+        mGuessField.clearFocus();
+
+        final String userId = DataModel.getDataModel().getUser().getId();
+        DataModel.getDataModel().getCurrentGame(new BaseDataSource.GetDataCallback<Game>() {
+            @Override
+            public void onDataLoaded(Game game) {
+                DataModel.getDataModel().setGuesses(new UserGameGuesses(userId, game.getId(), mGuesses), new BaseDataSource.UpdateDataCallback() {
+                    @Override
+                    public void onDataUpdated(String id) {
+                        sendToResults();
+                    }
+
+                    @Override
+                    public void onDataError() {
+
+                    }
+                });
             }
 
             @Override
@@ -157,10 +200,6 @@ public class GameTestActivity extends OrdoActivity {
     private void sendToResults() {
         Intent intent = new Intent(this, GameResultsActivity.class);
         startActivity(intent);
-    }
-
-    private void returnToMenu() {
-        Intent intent = new Intent(this, MenuActivity.class);
-        startActivity(intent);
+        requestFinish();
     }
 }

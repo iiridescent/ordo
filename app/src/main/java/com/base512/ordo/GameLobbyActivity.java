@@ -18,13 +18,14 @@ import android.widget.TextView;
 import com.base512.ordo.data.Game;
 import com.base512.ordo.data.source.BaseDataSource;
 import com.base512.ordo.data.source.DataModel;
+import com.base512.ordo.data.source.game.GameRepository;
 import com.base512.ordo.ui.EasingType;
 import com.base512.ordo.ui.SineInterpolator;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-public class GameLobbyActivity extends OrdoActivity {
+public class GameLobbyActivity extends BaseGameActivity implements GameRepository.OnGameStateChangeListener {
 
     @BindView(R.id.gameStartButton)
     Button mStartButton;
@@ -35,8 +36,6 @@ public class GameLobbyActivity extends OrdoActivity {
     @BindView(R.id.gameCodeContainer)
     LinearLayout mGameCodeContainer;
 
-    private ImageView mReturnToMenu;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -44,29 +43,27 @@ public class GameLobbyActivity extends OrdoActivity {
         ButterKnife.bind(this);
 
         setupViews();
+        setupLobby();
         setupAnimation();
     }
 
     private void setupViews() {
-        mReturnToMenu = (ImageView) findViewById(R.id.logoImage);
-
-        mReturnToMenu.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                returnToMenu();
-            }
-        });
-
         mStartButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 startGame();
             }
         });
+    }
 
+    private void setupLobby() {
         DataModel.getDataModel().getCurrentGame(new BaseDataSource.GetDataCallback<Game>() {
             @Override
             public void onDataLoaded(Game data) {
+                if(!data.getCreator().equals(DataModel.getDataModel().getUser().getId())) {
+                    DataModel.getDataModel().addOnGameStateChangeListener(GameLobbyActivity.this);
+                    mStartButton.setVisibility(View.GONE);
+                }
                 mGameCodeLabel.setText(data.getId());
             }
 
@@ -112,19 +109,20 @@ public class GameLobbyActivity extends OrdoActivity {
             public void onDataUpdated(String id) {
                 Intent intent = new Intent(GameLobbyActivity.this, GameStudyActivity.class);
                 startActivity(intent);
+                requestFinish();
             }
 
             @Override
             public void onDataError() {
-                Intent intent = new Intent(GameLobbyActivity.this, MenuActivity.class);
-                startActivity(intent);
+                goToMenu();
             }
         });
     }
 
-    private void returnToMenu() {
-        Intent intent = new Intent(this, MenuActivity.class);
-        startActivity(intent);
+    @Override
+    public void onStateChanged(Game.State newState) {
+        if(newState == Game.State.STUDY) {
+            startGame();
+        }
     }
-
 }
