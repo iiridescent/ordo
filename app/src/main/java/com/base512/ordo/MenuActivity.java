@@ -24,6 +24,9 @@ public class MenuActivity extends OrdoActivity {
     @BindView(R.id.joinGameButton)
     Button mJoinGameButton;
 
+    @BindView(R.id.uploadGameObjectButton)
+    Button mGameObjectUploadButton;
+
     @BindView(R.id.logoImage)
     ImageView mLogoImage;
 
@@ -58,6 +61,12 @@ public class MenuActivity extends OrdoActivity {
             @Override
             public void onClick(View view) {
                 exitToActivity(GameJoinActivity.class);
+            }
+        });
+        mGameObjectUploadButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                exitToActivity(GameObjectUploadActivity.class);
             }
         });
 

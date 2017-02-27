@@ -173,6 +173,8 @@ public class GameTestActivity extends BaseGameActivity {
         mNextButton.setEnabled(false);
         mGuessField.clearFocus();
 
+        setLoadingState(true);
+
         final String userId = DataModel.getDataModel().getUser().getId();
         DataModel.getDataModel().getCurrentGame(new BaseDataSource.GetDataCallback<Game>() {
             @Override
@@ -180,6 +182,7 @@ public class GameTestActivity extends BaseGameActivity {
                 DataModel.getDataModel().setGuesses(new UserGameGuesses(userId, game.getId(), mGuesses), new BaseDataSource.UpdateDataCallback() {
                     @Override
                     public void onDataUpdated(String id) {
+                        setLoadingState(false);
                         sendToResults();
                     }
 

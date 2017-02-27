@@ -1,7 +1,7 @@
 package com.base512.ordo.data.source.gameObject;
 
 import android.content.Context;
-import android.graphics.drawable.Drawable;
+import android.graphics.Bitmap;
 
 import com.base512.ordo.data.GameObject;
 import com.base512.ordo.data.source.BaseDataSource;
@@ -35,7 +35,7 @@ public class GameObjectModel {
     }
 
     public void loadGameObjects(final BaseDataSource.LoadDataCallback<GameObject> gameObjectsLoadDataCallback) {
-        if(mGameObjects == null || mGameObjects.size() == 0) {
+/*        if(mGameObjects == null || mGameObjects.size() == 0) {*/
             mGameObjectRepository.loadGameObjects(new BaseDataSource.LoadDataCallback<GameObject>() {
                 @Override
                 public void onDataLoaded(LinkedHashMap<String, GameObject> gameObjects) {
@@ -48,9 +48,13 @@ public class GameObjectModel {
                     gameObjectsLoadDataCallback.onDataError();
                 }
             });
-        } else {
+/*        } else {
             gameObjectsLoadDataCallback.onDataLoaded(mGameObjects);
-        }
+        }*/
+    }
+
+    public void addGameObject(GameObject gameObject, String gameObjectImageUrl, BaseDataSource.UpdateDataCallback gameObjectUploadCallback) {
+        mGameObjectRepository.uploadGameObject(gameObject, gameObjectImageUrl, mContext , gameObjectUploadCallback);
     }
 
     public void getGameObjectDrawable(String id, BaseDataSource.GetDataCallback<Integer> drawableDataCallback) {

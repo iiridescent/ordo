@@ -1,7 +1,9 @@
 package com.base512.ordo.data.source.gameObject;
 
 import android.content.Context;
+import android.graphics.Bitmap;
 import android.graphics.drawable.Drawable;
+import android.net.Uri;
 import android.support.annotation.NonNull;
 
 import com.base512.ordo.data.Game;
@@ -18,4 +20,6 @@ public interface GameObjectDataSource {
     void loadGameObjects(BaseDataSource.LoadDataCallback<GameObject> gameObjectsDataCallback);
 
     void getGameObjectResource(@NonNull String id, Context context, @NonNull BaseDataSource.GetDataCallback<Integer> drawableDataCallback);
+
+    void uploadGameObject(GameObject gameObject, String gameObjectImageUrl, Context context, BaseDataSource.UpdateDataCallback uploadImageCallback);
 }

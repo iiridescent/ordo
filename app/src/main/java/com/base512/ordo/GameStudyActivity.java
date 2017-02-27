@@ -3,15 +3,12 @@ package com.base512.ordo;
 import com.base512.ordo.ui.CounterView;
 import com.google.android.flexbox.FlexboxLayout;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.os.SystemClock;
 import android.support.graphics.drawable.AnimatedVectorDrawableCompat;
 import android.util.DisplayMetrics;
 import android.util.Log;
-import android.view.View;
 import android.widget.ImageView;
-import android.widget.TextView;
 
 import com.base512.ordo.data.Game;
 import com.base512.ordo.data.GameObject;
@@ -74,34 +71,29 @@ public class GameStudyActivity extends BaseGameActivity {
 
                 DisplayMetrics displayMetrics = new DisplayMetrics();
                 getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
+                int imageDivisor = 16;
                 int imageWidth = displayMetrics.widthPixels / rowSize;
+                int imageRealWidth = (imageWidth / imageDivisor) * (imageDivisor-2);
+                int imagePadding = (imageWidth / imageDivisor);
 
                 for(int i = 0; i < gameObjects.length; i++) {
 
                     final ImageView imageView = new ImageView(GameStudyActivity.this, null, R.style.StudyImage);
-                    DataModel.getDataModel().getGameObjectDrawable(gameObjects[i].getImageName(), new BaseDataSource.GetDataCallback<Integer>() {
-                        @Override
-                        public void onDataLoaded(Integer integer) {
 
-                            imageView.setScaleType(ImageView.ScaleType.CENTER);
-                            imageView.setAdjustViewBounds(false);
-                            imageView.setImageDrawable(loadingAnimation);
+                    imageView.setScaleType(ImageView.ScaleType.CENTER);
+                    imageView.setAdjustViewBounds(false);
+                    imageView.setImageDrawable(loadingAnimation);
 
-                            Glide.with(getApplicationContext()).load(integer).fitCenter().crossFade().placeholder(R.drawable.ic_memory_animated).into(imageView);
-                        }
-
-                        @Override
-                        public void onDataError() {
-                            Log.d(GameStudyActivity.class.getSimpleName(), "Failed to load image");
-                        }
-                    });
+                    Glide.with(getApplicationContext()).load(gameObjects[i].getImageUrl()).centerCrop().crossFade().placeholder(R.drawable.ic_memory_animated).into(imageView);
                     imageView.setAdjustViewBounds(true);
                     FlexboxLayout.LayoutParams params = new FlexboxLayout.LayoutParams(
                             FlexboxLayout.LayoutParams.ALIGN_SELF_AUTO,
                             FlexboxLayout.LayoutParams.ALIGN_SELF_AUTO
                     );
 
-                    params.width = imageWidth;
+                    params.width = imageRealWidth;
+                    params.height = imageRealWidth;
+                    params.setMargins(imagePadding, imagePadding, imagePadding, imagePadding);
                     imageView.setLayoutParams(params);
 
                     mContainerLayout.addView(imageView);

@@ -49,7 +49,7 @@ final class UserRepository implements UserDataSource {
         int highScore = prefs.getInt(USER_HIGH_SCORE, 0);
         int gamesPlayed = prefs.getInt(USER_GAMES_PLAYED, 0);
 
-        User user = new User(keyCode, gamesPlayed, highScore);
+        User user = new User(keyCode, highScore, gamesPlayed);
 
         return user;
     }

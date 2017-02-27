@@ -64,6 +64,12 @@
                 android:theme="@style/AppTheme.NoActionBar">
         </activity>
 
+        <activity
+                android:name=".GameObjectUploadActivity"
+                android:label="@string/upload_object_activity_label"
+                android:theme="@style/AppTheme.NoActionBar">
+        </activity>
+
     </application>
 
 </manifest>

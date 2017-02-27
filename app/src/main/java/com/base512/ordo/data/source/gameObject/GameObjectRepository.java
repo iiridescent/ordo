@@ -1,21 +1,35 @@
 package com.base512.ordo.data.source.gameObject;
 
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
+import com.google.android.gms.tasks.TaskCompletionSource;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
+import com.google.firebase.storage.UploadTask;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.graphics.Bitmap;
+import android.net.Uri;
 import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
 
 import com.base512.ordo.R;
 import com.base512.ordo.data.GameObject;
 import com.base512.ordo.data.source.BaseDataSource;
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.animation.GlideAnimation;
+import com.bumptech.glide.request.target.SimpleTarget;
 
+import java.io.ByteArrayOutputStream;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 
@@ -28,6 +42,7 @@ public class GameObjectRepository implements GameObjectDataSource {
     // Key to game objects in database
     private static final String OBJECTS = "objects";
     private static final String IMAGE_NAME = "imageName";
+    private static final String IMAGE_URL = "imageUrl";
     private static final String NAME = "name";
 
     private static final HashMap<String, Integer> sStubImages = new HashMap<>();
@@ -35,6 +50,7 @@ public class GameObjectRepository implements GameObjectDataSource {
     private static SharedPreferences sPrefs;
 
     private static DatabaseReference sDatabaseReference;
+    private static StorageReference sStorageReference;
 
     @Override
     public void getGameObject(@NonNull final String id, final BaseDataSource.GetDataCallback<GameObject> gameObjectDataCallback) {
@@ -48,7 +64,7 @@ public class GameObjectRepository implements GameObjectDataSource {
                     GameObject gameObject = new GameObject(
                             id,
                             dataSnapshot.child(NAME).getValue(String.class),
-                            dataSnapshot.child(IMAGE_NAME).getValue(String.class)
+                            dataSnapshot.child(IMAGE_URL).getValue(String.class)
                     );
                     gameObjectDataCallback.onDataLoaded(gameObject);
                 } else {
@@ -76,7 +92,7 @@ public class GameObjectRepository implements GameObjectDataSource {
                     GameObject gameObject = new GameObject(
                             child.getKey(),
                             child.child(NAME).getValue(String.class),
-                            child.child(IMAGE_NAME).getValue(String.class)
+                            child.child(IMAGE_URL).getValue(String.class)
                     );
                     gameObjects.put(gameObject.getId(), gameObject);
                 }
@@ -100,6 +116,65 @@ public class GameObjectRepository implements GameObjectDataSource {
         } else {
             drawableDataCallback.onDataError();
         }
+    }
+
+    @Override
+    public void uploadGameObject(final GameObject gameObject, String gameObjectImageUrl, Context context, final BaseDataSource.UpdateDataCallback uploadGameObjectCallback) {
+        final DatabaseReference gameObjectReference = getDatabaseReference().push();
+        final StorageReference gameObjectFileReference = getStorageReference().child(gameObjectReference.getKey());
+
+        final TaskCompletionSource<String> uploadImageTaskCompletionSource = new TaskCompletionSource<>();
+        Task<String> uploadImageTask = uploadImageTaskCompletionSource.getTask();
+
+        Glide.with(context.getApplicationContext())
+                .load(gameObjectImageUrl)
+                .asBitmap()
+                .toBytes()
+                .override(500, 500)
+                .centerCrop()
+                .into(new SimpleTarget<byte[]>() {
+                    @Override
+                    public void onResourceReady(byte[] resource, GlideAnimation<? super byte[]> glideAnimation) {
+                        UploadTask uploadTask = gameObjectFileReference.putBytes(resource);
+                        uploadTask.addOnFailureListener(new OnFailureListener() {
+                            @Override
+                            public void onFailure(@NonNull Exception exception) {
+                                uploadGameObjectCallback.onDataError();
+                                uploadImageTaskCompletionSource.setException(exception);
+                            }
+                        }).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+                            @Override
+                            public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                                Uri downloadUrl = taskSnapshot.getDownloadUrl();
+                                uploadImageTaskCompletionSource.setResult(downloadUrl.toString());
+                            }
+                        });
+                    }
+                });
+
+        uploadImageTask.addOnCompleteListener(new OnCompleteListener<String>() {
+            @Override
+            public void onComplete(@NonNull Task<String> task) {
+                if(task.getException() != null) {
+                    uploadGameObjectCallback.onDataError();
+                    return;
+                }
+
+                String imageUrl = task.getResult();
+                HashMap<String, Object> gameObjectValues = new HashMap<>();
+                gameObjectValues.put(NAME, gameObject.getName());
+                gameObjectValues.put(IMAGE_URL, imageUrl);
+                gameObjectReference.updateChildren(gameObjectValues).addOnCompleteListener(new OnCompleteListener<Void>() {
+                    @Override
+                    public void onComplete(@NonNull Task<Void> task) {
+                        if(task.getException() != null) {
+                            uploadGameObjectCallback.onDataError();
+                        }
+                        uploadGameObjectCallback.onDataUpdated(gameObjectReference.getKey());
+                    }
+                });
+            }
+        });
     }
 
     private static HashMap<String, Integer> getStubImages() {
@@ -132,5 +207,13 @@ public class GameObjectRepository implements GameObjectDataSource {
         }
 
         return sPrefs;
+    }
+
+    private static StorageReference getStorageReference() {
+        if(sStorageReference == null) {
+            sStorageReference = FirebaseStorage.getInstance().getReference().child(OBJECTS);
+        }
+
+        return sStorageReference;
     }
 }

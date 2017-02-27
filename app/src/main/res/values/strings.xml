@@ -10,4 +10,6 @@
     <string name="study_activity_label">study</string>
     <string name="test_activity_label">evaluation</string>
     <string name="results_activity_label">results</string>
+    <string name="upload_object_activity_label">upload object</string>
+    <string name="upload_object">upload object</string>
 </resources>

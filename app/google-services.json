@@ -46,6 +46,14 @@
       },
       "oauth_client": [
         {
+          "client_id": "33947100403-8n2kci1qtl0k6hlchqo1ha8asqtqnsgh.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.base512.ordo",
+            "certificate_hash": "56bfca03bfd3a216c4b956ed337e82a4a5c250ad"
+          }
+        },
+        {
           "client_id": "33947100403-2injibojbkiik9mlqhog93rvkb2ukgd0.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {

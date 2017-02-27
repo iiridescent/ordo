@@ -4,20 +4,20 @@ public class GameObject extends DataObject {
 
     private final String mName;
 
-    private final String mImageName;
+    private final String mImageUrl;
 
-    public GameObject(String id, String name, String imageName) {
+    public GameObject(String id, String name, String imageUrl) {
         super(id);
 
         mName = name;
-        mImageName = imageName;
+        mImageUrl = imageUrl;
     }
 
     public String getName() {
         return mName;
     }
 
-    public String getImageName() {
-        return mImageName;
+    public String getImageUrl() {
+        return mImageUrl;
     }
 }

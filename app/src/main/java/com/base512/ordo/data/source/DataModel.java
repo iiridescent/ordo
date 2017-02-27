@@ -1,6 +1,7 @@
 package com.base512.ordo.data.source;
 
 import android.content.Context;
+import android.graphics.Bitmap;
 
 import com.base512.ordo.data.Game;
 import com.base512.ordo.data.GameObject;
@@ -78,6 +79,10 @@ public class DataModel {
 
     public void getGameObjectDrawable(String id, BaseDataSource.GetDataCallback<Integer> drawableDataCallback) {
         mGameObjectModel.getGameObjectDrawable(id, drawableDataCallback);
+    }
+
+    public void addGameObject(GameObject gameObject, String gameObjectImageUrl, BaseDataSource.UpdateDataCallback updateGameObjectCallback) {
+        mGameObjectModel.addGameObject(gameObject, gameObjectImageUrl, updateGameObjectCallback);
     }
 
     public void getCurrentGame(BaseDataSource.GetDataCallback<Game> gameDataCallback) {

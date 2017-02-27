@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                                             xmlns:app="http://schemas.android.com/apk/res-auto"
+                                             xmlns:tools="http://schemas.android.com/tools"
+                                             android:id="@+id/activity_game_object_upload"
+                                             android:layout_width="match_parent"
+                                             android:layout_height="match_parent"
+                                             tools:context="com.base512.ordo.GameJoinActivity">
+
+    <Button
+            android:text="upload"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            style="@style/MenuButton"
+            android:id="@+id/gameObjectUploadButton"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            android:layout_marginBottom="32dp"/>
+
+    <EditText
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:id="@+id/gameObjectUploadNameField"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            android:layout_marginStart="16dp"
+            android:layout_marginEnd="16dp"
+            android:inputType="text"
+            android:hint="name"
+            android:textAppearance="@style/TextAppearance.AppCompat.Display1"
+            android:layout_marginTop="8dp"
+            app:layout_constraintTop_toBottomOf="@+id/gameObjectUploadImagePreview"/>
+
+    <TextView
+            android:text="select an image"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/gameObjectUploadImagePromptLabel"
+            style="@style/CaptionLabelStyle"
+            app:layout_constraintLeft_toLeftOf="@+id/gameObjectUploadImagePreview"
+            app:layout_constraintBottom_toBottomOf="@+id/gameObjectUploadImagePreview"
+            app:layout_constraintTop_toTopOf="@+id/gameObjectUploadImagePreview"
+            app:layout_constraintRight_toRightOf="@+id/gameObjectUploadImagePreview"
+            app:layout_constraintVertical_bias="0.66"/>
+
+    <ImageView
+            android:layout_width="80dp"
+            android:layout_height="80dp"
+            android:padding="16dp"
+            android:background="@drawable/flash"
+            android:id="@+id/gameObjectUploadImagePromptIcon"
+            android:src="@drawable/camera_phone_anim"
+            android:tint="@android:color/white"
+            app:layout_constraintBottom_toTopOf="@+id/gameObjectUploadImagePromptLabel"
+            app:layout_constraintLeft_toLeftOf="@+id/gameObjectUploadImagePromptLabel"
+            app:layout_constraintRight_toRightOf="@+id/gameObjectUploadImagePromptLabel"/>
+
+    <ImageView
+            android:layout_width="80dp"
+            android:layout_height="80dp"
+            android:padding="16dp"
+            android:visibility="invisible"
+            android:src="@drawable/camera_phone_anim"
+            android:tint="@android:color/black"
+            android:id="@+id/gameObjectUploadImagePromptFlash"
+            app:layout_constraintBottom_toTopOf="@+id/gameObjectUploadImagePromptLabel"
+            app:layout_constraintLeft_toLeftOf="@+id/gameObjectUploadImagePromptLabel"
+            app:layout_constraintRight_toRightOf="@+id/gameObjectUploadImagePromptLabel"/>
+
+    <ImageView
+            android:layout_width="0dp"
+            android:layout_height="200dp"
+            android:id="@+id/gameObjectUploadImagePreview"
+            android:background="?attr/selectableItemBackground"
+            android:clickable="true"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            android:scaleType="centerCrop"
+            app:layout_constraintHorizontal_bias="0.0"/>
+
+</android.support.constraint.ConstraintLayout>
