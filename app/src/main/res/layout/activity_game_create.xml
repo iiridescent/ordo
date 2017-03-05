@@ -12,7 +12,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             ordo:defaultValue="6"
-            ordo:maxValue="7"
+            ordo:maxValue="52"
             ordo:minValue="0"
             ordo:labelText="number of objects"
             android:id="@+id/gameCreateObjectsField"
