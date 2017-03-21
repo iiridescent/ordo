@@ -1,12 +1,9 @@
 package com.base512.ordo;
 
 import android.content.Intent;
-import android.provider.ContactsContract;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
-import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.base512.ordo.data.Game;
@@ -14,10 +11,6 @@ import com.base512.ordo.data.GameObject;
 import com.base512.ordo.data.UserGameGuesses;
 import com.base512.ordo.data.source.BaseDataSource;
 import com.base512.ordo.data.source.DataModel;
-import com.base512.ordo.util.ActivityUtils;
-
-import uk.co.chrisjenx.calligraphy.CalligraphyConfig;
-import uk.co.chrisjenx.calligraphy.CalligraphyUtils;
 
 public class GameResultsActivity extends BaseGameActivity {
 
@@ -69,7 +62,8 @@ public class GameResultsActivity extends BaseGameActivity {
                         for(String guess : guesses.getGuesses()) {
                             boolean correct = false;
                             for(GameObject object : game.getGameObjects()) {
-                                if(object.getName().equals(guess.toLowerCase())) {
+                                for(String name : object.getNames())
+                                if(name.equals(guess.toLowerCase())) {
                                     correct = true;
                                 }
                             }

@@ -1,20 +1,22 @@
 package com.base512.ordo.data;
 
+import java.util.ArrayList;
+
 public class GameObject extends DataObject {
 
-    private final String mName;
+    private final ArrayList<String> mNames;
 
     private final String mImageUrl;
 
-    public GameObject(String id, String name, String imageUrl) {
+    public GameObject(String id, ArrayList<String> names, String imageUrl) {
         super(id);
 
-        mName = name;
+        mNames = names;
         mImageUrl = imageUrl;
     }
 
-    public String getName() {
-        return mName;
+    public ArrayList<String> getNames() {
+        return mNames;
     }
 
     public String getImageUrl() {

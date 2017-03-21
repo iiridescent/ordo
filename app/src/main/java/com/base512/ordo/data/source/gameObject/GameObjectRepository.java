@@ -17,7 +17,6 @@ import com.google.firebase.storage.UploadTask;
 
 import android.content.Context;
 import android.content.SharedPreferences;
-import android.graphics.Bitmap;
 import android.net.Uri;
 import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
@@ -29,7 +28,7 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.animation.GlideAnimation;
 import com.bumptech.glide.request.target.SimpleTarget;
 
-import java.io.ByteArrayOutputStream;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 
@@ -44,6 +43,7 @@ public class GameObjectRepository implements GameObjectDataSource {
     private static final String IMAGE_NAME = "imageName";
     private static final String IMAGE_URL = "imageUrl";
     private static final String NAME = "name";
+    private static final String NAMES = "names";
 
     private static final HashMap<String, Integer> sStubImages = new HashMap<>();
 
@@ -61,9 +61,18 @@ public class GameObjectRepository implements GameObjectDataSource {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 if(dataSnapshot.exists()) {
+                    ArrayList<String> names = new ArrayList<>();
+                    if(dataSnapshot.child(NAMES).exists()) {
+                        for(DataSnapshot nameSnapshot : dataSnapshot.child(NAMES).getChildren()) {
+                            names.add(nameSnapshot.getValue(String.class));
+                        }
+                    } else {
+                        names.add(dataSnapshot.child(NAME).getValue(String.class));
+                    }
+
                     GameObject gameObject = new GameObject(
                             id,
-                            dataSnapshot.child(NAME).getValue(String.class),
+                            names,
                             dataSnapshot.child(IMAGE_URL).getValue(String.class)
                     );
                     gameObjectDataCallback.onDataLoaded(gameObject);
@@ -89,9 +98,17 @@ public class GameObjectRepository implements GameObjectDataSource {
                 LinkedHashMap<String, GameObject> gameObjects = new LinkedHashMap<>();
 
                 for(DataSnapshot child : dataSnapshot.getChildren()) {
+                    ArrayList<String> names = new ArrayList<>();
+                    if(dataSnapshot.child(NAMES).exists()) {
+                        for(DataSnapshot nameSnapshot : dataSnapshot.child(NAMES).getChildren()) {
+                            names.add(nameSnapshot.getValue(String.class));
+                        }
+                    } else {
+                        names.add(dataSnapshot.child(NAME).getValue(String.class));
+                    }
                     GameObject gameObject = new GameObject(
                             child.getKey(),
-                            child.child(NAME).getValue(String.class),
+                            names,
                             child.child(IMAGE_URL).getValue(String.class)
                     );
                     gameObjects.put(gameObject.getId(), gameObject);
@@ -162,7 +179,7 @@ public class GameObjectRepository implements GameObjectDataSource {
 
                 String imageUrl = task.getResult();
                 HashMap<String, Object> gameObjectValues = new HashMap<>();
-                gameObjectValues.put(NAME, gameObject.getName());
+                gameObjectValues.put(NAMES, gameObject.getNames());
                 gameObjectValues.put(IMAGE_URL, imageUrl);
                 gameObjectReference.updateChildren(gameObjectValues).addOnCompleteListener(new OnCompleteListener<Void>() {
                     @Override

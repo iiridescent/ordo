@@ -19,6 +19,7 @@ import com.base512.ordo.data.source.DataModel;
 import com.bumptech.glide.Glide;
 
 import java.io.IOException;
+import java.util.ArrayList;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -94,8 +95,14 @@ public class GameObjectUploadActivity extends BaseGameActivity {
         mUploadImagePromptIcon.postDelayed(mCameraIconAnimateRunnable, 1500);
     }
 
+    // FIXME: 3/21/2017
+    // This needs to use multiple objects as input
+
     private void attemptUpload() {
-        String objectName = mNameField.getText().toString();
+        ArrayList<String> objectNames = new ArrayList<>();
+
+        // FIXME: 3/21/2017 This is a total stub
+        objectNames.add(mNameField.getText().toString());
 
         boolean hasError = false;
 
@@ -104,16 +111,18 @@ public class GameObjectUploadActivity extends BaseGameActivity {
             hasError = true;
         }
 
-        if(objectName.isEmpty() || objectName.equals(" ")) {
-            Toast.makeText(this, "name is required", Toast.LENGTH_SHORT).show();
-            hasError = true;
+        for (String objectName : objectNames) {
+            if (objectName.isEmpty() || objectName.equals(" ")) {
+                Toast.makeText(this, "one or more names are missing", Toast.LENGTH_SHORT).show();
+                hasError = true;
+            }
         }
 
         if(hasError) {
             return;
         }
 
-        GameObject gameObject = new GameObject(null, objectName, null);
+        GameObject gameObject = new GameObject(null, objectNames, null);
         setLoadingState(true);
         DataModel.getDataModel().addGameObject(gameObject, mImage.toString(), new BaseDataSource.UpdateDataCallback() {
             @Override

@@ -1,9 +1,7 @@
 package com.base512.ordo;
 
 import android.content.Intent;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.support.v7.view.menu.ExpandedMenuView;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.KeyEvent;
@@ -14,7 +12,6 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.base512.ordo.data.Game;
 import com.base512.ordo.data.GameObject;
@@ -137,14 +134,6 @@ public class GameTestActivity extends BaseGameActivity {
         DataModel.getDataModel().getCurrentGame(new BaseDataSource.GetDataCallback<Game>() {
             @Override
             public void onDataLoaded(Game data) {
-                boolean isCorrect = false;
-                for(GameObject object : data.getGameObjects()) {
-                    if(object.getName().equals(guess)) {
-                        isCorrect = true;
-                    }
-                }
-                /*Toast.makeText(GameTestActivity.this, String.valueOf(isCorrect), Toast.LENGTH_LONG).show();*/
-
                 mGuesses.add(guess);
 
                 TextView guessLabel = new TextView(GameTestActivity.this, null, R.style.GuessLabelStyle, R.style.GuessLabelStyle);
