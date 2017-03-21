@@ -99,12 +99,12 @@ public class GameObjectRepository implements GameObjectDataSource {
 
                 for(DataSnapshot child : dataSnapshot.getChildren()) {
                     ArrayList<String> names = new ArrayList<>();
-                    if(dataSnapshot.child(NAMES).exists()) {
-                        for(DataSnapshot nameSnapshot : dataSnapshot.child(NAMES).getChildren()) {
+                    if(child.child(NAMES).exists()) {
+                        for(DataSnapshot nameSnapshot : child.child(NAMES).getChildren()) {
                             names.add(nameSnapshot.getValue(String.class));
                         }
                     } else {
-                        names.add(dataSnapshot.child(NAME).getValue(String.class));
+                        names.add(child.child(NAME).getValue(String.class));
                     }
                     GameObject gameObject = new GameObject(
                             child.getKey(),

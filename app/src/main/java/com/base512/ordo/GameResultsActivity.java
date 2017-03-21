@@ -62,9 +62,10 @@ public class GameResultsActivity extends BaseGameActivity {
                         for(String guess : guesses.getGuesses()) {
                             boolean correct = false;
                             for(GameObject object : game.getGameObjects()) {
-                                for(String name : object.getNames())
-                                if(name.equals(guess.toLowerCase())) {
-                                    correct = true;
+                                for(String name : object.getNames()) {
+                                    if (name.equals(guess.toLowerCase())) {
+                                        correct = true;
+                                    }
                                 }
                             }
                             correctGuesses = correct ? correctGuesses + 1 : correctGuesses;
