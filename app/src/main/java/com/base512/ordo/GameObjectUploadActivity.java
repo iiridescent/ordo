@@ -1,15 +1,13 @@
 package com.base512.ordo;
 
 import android.content.Intent;
-import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
-import android.provider.MediaStore;
 import android.support.graphics.drawable.AnimatedVectorDrawableCompat;
-import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -18,7 +16,9 @@ import com.base512.ordo.data.source.BaseDataSource;
 import com.base512.ordo.data.source.DataModel;
 import com.bumptech.glide.Glide;
 
-import java.io.IOException;
+import uk.co.chrisjenx.calligraphy.CalligraphyConfig;
+import uk.co.chrisjenx.calligraphy.CalligraphyUtils;
+
 import java.util.ArrayList;
 
 import butterknife.BindView;
@@ -44,11 +44,14 @@ public class GameObjectUploadActivity extends BaseGameActivity {
     @BindView(R.id.gameObjectUploadImagePreview)
     ImageView mUploadImagePreview;
 
-    @BindView(R.id.gameObjectUploadNameField)
-    EditText mNameField;
+    @BindView(R.id.gameObjectUploadNamesContainer)
+    LinearLayout mNamesContainer;
 
     @BindView(R.id.gameObjectUploadButton)
     TextView mUploadButton;
+
+    @BindView(R.id.gameObjectUploadNameAddButton)
+    LinearLayout mNameAddButton;
 
     private CameraIconAnimateRunnable mCameraIconAnimateRunnable;
     private CameraIconFlashRunnable mCameraIconFlashRunnable;
@@ -81,7 +84,28 @@ public class GameObjectUploadActivity extends BaseGameActivity {
             }
         });
 
+        mNameAddButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                addNameField();
+            }
+        });
+
         startAnimating();
+
+        addNameField();
+    }
+
+    private void addNameField() {
+        EditText editText = new EditText(this, null, R.style.NameFieldStyle, R.style.NameFieldStyle);
+        CalligraphyUtils.applyFontToTextView(this, editText, CalligraphyConfig.get().getFontPath());
+
+        LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(
+                android.widget.LinearLayout.LayoutParams.MATCH_PARENT,
+                android.widget.LinearLayout.LayoutParams.WRAP_CONTENT);
+        editText.setLayoutParams(params);
+
+        mNamesContainer.addView(editText);
     }
 
     private void startAnimating() {
@@ -102,7 +126,12 @@ public class GameObjectUploadActivity extends BaseGameActivity {
         ArrayList<String> objectNames = new ArrayList<>();
 
         // FIXME: 3/21/2017 This is a total stub
-        objectNames.add(mNameField.getText().toString());
+        //objectNames.add(mNameField.getText().toString());
+
+        for(int i = 0; i < mNamesContainer.getChildCount(); i++) {
+            EditText childField = (EditText) mNamesContainer.getChildAt(i);
+            objectNames.add(childField.getText().toString());
+        }
 
         boolean hasError = false;
 
@@ -142,7 +171,8 @@ public class GameObjectUploadActivity extends BaseGameActivity {
 
     private void clearUi() {
         mImage = null;
-        mNameField.setText("");
+        mNamesContainer.removeAllViews();
+        addNameField();
         mUploadImagePreview.setImageDrawable(null);
     }
 
