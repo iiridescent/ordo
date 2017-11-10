@@ -1,9 +1,5 @@
 package com.base512.ordo.data;
 
-import android.os.SystemClock;
-
-import java.util.ArrayList;
-
 /**
  * Created by Thomas on 2/21/2017.
  */
@@ -14,9 +10,12 @@ public class Game extends DataObject {
 
         private final int mStudyDuration;
 
-        public Config(int numberOfObjects, int studyDuration) {
+        private final GameObject.Type mObjectType;
+
+        public Config(int numberOfObjects, int studyDuration, GameObject.Type objectType) {
             mNumberOfObjects = numberOfObjects;
             mStudyDuration = studyDuration;
+            mObjectType = objectType;
         }
 
         public int getNumberOfObjects() {
@@ -25,6 +24,10 @@ public class Game extends DataObject {
 
         public int getStudyDuration() {
             return mStudyDuration;
+        }
+
+        public GameObject.Type getObjectType() {
+            return mObjectType;
         }
     }
 

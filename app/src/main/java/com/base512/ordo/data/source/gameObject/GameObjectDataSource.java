@@ -22,4 +22,6 @@ public interface GameObjectDataSource {
     void getGameObjectResource(@NonNull String id, Context context, @NonNull BaseDataSource.GetDataCallback<Integer> drawableDataCallback);
 
     void uploadGameObject(GameObject gameObject, String gameObjectImageUrl, Context context, BaseDataSource.UpdateDataCallback uploadImageCallback);
+
+    void loadGameObjectsForType(GameObject.Type type, BaseDataSource.LoadDataCallback<GameObject> gameObjectsDataCallback);
 }

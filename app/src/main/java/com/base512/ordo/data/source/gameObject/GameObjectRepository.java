@@ -43,6 +43,7 @@ public class GameObjectRepository implements GameObjectDataSource {
     private static final String IMAGE_NAME = "imageName";
     private static final String IMAGE_URL = "imageUrl";
     private static final String NAME = "name";
+    private static final String TYPE = "type";
     private static final String NAMES = "names";
 
     private static final HashMap<String, Integer> sStubImages = new HashMap<>();
@@ -73,7 +74,8 @@ public class GameObjectRepository implements GameObjectDataSource {
                     GameObject gameObject = new GameObject(
                             id,
                             names,
-                            dataSnapshot.child(IMAGE_URL).getValue(String.class)
+                            dataSnapshot.child(IMAGE_URL).getValue(String.class),
+                            dataSnapshot.child(TYPE).exists() ? GameObject.Type.valueOf(dataSnapshot.child(TYPE).getValue(String.class)) : GameObject.Type.ITEM
                     );
                     gameObjectDataCallback.onDataLoaded(gameObject);
                 } else {
@@ -109,7 +111,45 @@ public class GameObjectRepository implements GameObjectDataSource {
                     GameObject gameObject = new GameObject(
                             child.getKey(),
                             names,
-                            child.child(IMAGE_URL).getValue(String.class)
+                            child.child(IMAGE_URL).getValue(String.class),
+                            dataSnapshot.child(TYPE).exists() ? GameObject.Type.valueOf(dataSnapshot.child(TYPE).getValue(String.class)) : GameObject.Type.ITEM
+                    );
+                    gameObjects.put(gameObject.getId(), gameObject);
+                }
+
+                gameObjectsDataCallback.onDataLoaded(gameObjects);
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                gameObjectsDataCallback.onDataError();
+            }
+        });
+    }
+
+    @Override
+    public void loadGameObjectsForType(GameObject.Type type, final BaseDataSource.LoadDataCallback<GameObject> gameObjectsDataCallback) {
+        Query gameObjectsQuery = getDatabaseReference().orderByChild(TYPE).equalTo(type.toString());
+
+        gameObjectsQuery.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                LinkedHashMap<String, GameObject> gameObjects = new LinkedHashMap<>();
+
+                for(DataSnapshot child : dataSnapshot.getChildren()) {
+                    ArrayList<String> names = new ArrayList<>();
+                    if(child.child(NAMES).exists()) {
+                        for(DataSnapshot nameSnapshot : child.child(NAMES).getChildren()) {
+                            names.add(nameSnapshot.getValue(String.class));
+                        }
+                    } else {
+                        names.add(child.child(NAME).getValue(String.class));
+                    }
+                    GameObject gameObject = new GameObject(
+                            child.getKey(),
+                            names,
+                            child.child(IMAGE_URL).getValue(String.class),
+                            dataSnapshot.child(TYPE).exists() ? GameObject.Type.valueOf(dataSnapshot.child(TYPE).getValue(String.class)) : GameObject.Type.ITEM
                     );
                     gameObjects.put(gameObject.getId(), gameObject);
                 }
@@ -180,6 +220,7 @@ public class GameObjectRepository implements GameObjectDataSource {
                 String imageUrl = task.getResult();
                 HashMap<String, Object> gameObjectValues = new HashMap<>();
                 gameObjectValues.put(NAMES, gameObject.getNames());
+                gameObjectValues.put(TYPE, gameObject.getType().toString());
                 gameObjectValues.put(IMAGE_URL, imageUrl);
                 gameObjectReference.updateChildren(gameObjectValues).addOnCompleteListener(new OnCompleteListener<Void>() {
                     @Override

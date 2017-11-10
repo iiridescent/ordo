@@ -8,6 +8,7 @@ import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RadioGroup;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -53,8 +54,13 @@ public class GameObjectUploadActivity extends BaseGameActivity {
     @BindView(R.id.gameObjectUploadNameAddButton)
     LinearLayout mNameAddButton;
 
+    @BindView(R.id.gameObjectUploadTypeSelector)
+    RadioGroup mTypeSelector;
+
     private CameraIconAnimateRunnable mCameraIconAnimateRunnable;
     private CameraIconFlashRunnable mCameraIconFlashRunnable;
+
+    private GameObject.Type objectType;
 
     private boolean isAnimationReversed = false;
     private boolean mInFlash = false;
@@ -88,6 +94,22 @@ public class GameObjectUploadActivity extends BaseGameActivity {
             @Override
             public void onClick(View v) {
                 addNameField();
+            }
+        });
+
+        objectType = GameObject.Type.ITEM;
+
+        mTypeSelector.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(RadioGroup group, int checkedId) {
+                switch (checkedId) {
+                    case R.id.gameObjectUploadTypeItem:
+                        objectType = GameObject.Type.ITEM;
+                        break;
+                    case R.id.gameObjectUploadTypeLicensePlate:
+                        objectType = GameObject.Type.US_LICENSE_PLATE;
+                        break;
+                }
             }
         });
 
@@ -151,7 +173,7 @@ public class GameObjectUploadActivity extends BaseGameActivity {
             return;
         }
 
-        GameObject gameObject = new GameObject(null, objectNames, null);
+        GameObject gameObject = new GameObject(null, objectNames, null, objectType);
         setLoadingState(true);
         DataModel.getDataModel().addGameObject(gameObject, mImage.toString(), new BaseDataSource.UpdateDataCallback() {
             @Override

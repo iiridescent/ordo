@@ -335,7 +335,7 @@ public class GameRepository implements GameDataSource {
 
         final GameObject[] gameObjects = new GameObject[config.getNumberOfObjects()];
 
-        DataModel.getDataModel().getGameObjects(new BaseDataSource.LoadDataCallback<GameObject>() {
+        DataModel.getDataModel().getGameObjectsForType(config.getObjectType(), new BaseDataSource.LoadDataCallback<GameObject>() {
             @Override
             public void onDataLoaded(LinkedHashMap<String, GameObject> data) {
                 ArrayList<GameObject> availableGameObjects = new ArrayList<>(((LinkedHashMap<String, GameObject>) data.clone()).values());

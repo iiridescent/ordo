@@ -53,6 +53,20 @@ public class GameObjectModel {
         }*/
     }
 
+    public void loadGameObjectsForType(GameObject.Type gameObjectType, final BaseDataSource.LoadDataCallback<GameObject> gameObjectsLoadDataCallback) {
+        mGameObjectRepository.loadGameObjectsForType(gameObjectType, new BaseDataSource.LoadDataCallback<GameObject>() {
+            @Override
+            public void onDataLoaded(LinkedHashMap<String, GameObject> gameObjects) {
+                gameObjectsLoadDataCallback.onDataLoaded(gameObjects);
+            }
+
+            @Override
+            public void onDataError() {
+                gameObjectsLoadDataCallback.onDataError();
+            }
+        });
+    }
+
     public void addGameObject(GameObject gameObject, String gameObjectImageUrl, BaseDataSource.UpdateDataCallback gameObjectUploadCallback) {
         mGameObjectRepository.uploadGameObject(gameObject, gameObjectImageUrl, mContext , gameObjectUploadCallback);
     }

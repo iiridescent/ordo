@@ -80,11 +80,11 @@ public class GameStudyActivity extends BaseGameActivity {
 
                     final ImageView imageView = new ImageView(GameStudyActivity.this, null, R.style.StudyImage);
 
-                    imageView.setScaleType(ImageView.ScaleType.CENTER);
+                    imageView.setScaleType(ImageView.ScaleType.FIT_CENTER);
                     imageView.setAdjustViewBounds(false);
                     imageView.setImageDrawable(loadingAnimation);
 
-                    Glide.with(getApplicationContext()).load(gameObjects[i].getImageUrl()).centerCrop().crossFade().placeholder(R.drawable.ic_memory_animated).into(imageView);
+                    Glide.with(getApplicationContext()).load(gameObjects[i].getImageUrl()).fitCenter().crossFade().placeholder(R.drawable.ic_memory_animated).into(imageView);
                     imageView.setAdjustViewBounds(true);
                     FlexboxLayout.LayoutParams params = new FlexboxLayout.LayoutParams(
                             FlexboxLayout.LayoutParams.ALIGN_SELF_AUTO,

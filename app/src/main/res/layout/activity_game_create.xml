@@ -32,6 +32,27 @@
             app:layout_constraintTop_toBottomOf="@+id/gameCreateObjectsField"
             app:layout_constraintRight_toRightOf="parent"/>
 
+    <RadioGroup
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:id="@+id/gameCreateTypeSelector"
+            android:layout_marginStart="14dp"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/gameCreateDurationField">
+        <RadioButton
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:checked="true"
+                android:id="@+id/gameCreateTypeItems"
+                android:text="Items"/>
+        <RadioButton
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/gameCreateTypeUsLicensePlates"
+                android:text="US license plates"/>
+    </RadioGroup>
+
     <Button
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"

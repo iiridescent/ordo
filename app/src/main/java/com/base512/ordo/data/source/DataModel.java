@@ -77,6 +77,10 @@ public class DataModel {
         mGameObjectModel.loadGameObjects(gameObjectsDataCallback);
     }
 
+    public void getGameObjectsForType(GameObject.Type type, BaseDataSource.LoadDataCallback<GameObject> gameObjectsDataCallback) {
+        mGameObjectModel.loadGameObjectsForType(type, gameObjectsDataCallback);
+    }
+
     public void getGameObjectDrawable(String id, BaseDataSource.GetDataCallback<Integer> drawableDataCallback) {
         mGameObjectModel.getGameObjectDrawable(id, drawableDataCallback);
     }

@@ -8,11 +8,14 @@ public class GameObject extends DataObject {
 
     private final String mImageUrl;
 
-    public GameObject(String id, ArrayList<String> names, String imageUrl) {
+    private final Type mType;
+
+    public GameObject(String id, ArrayList<String> names, String imageUrl, Type type) {
         super(id);
 
         mNames = names;
         mImageUrl = imageUrl;
+        mType = type;
     }
 
     public ArrayList<String> getNames() {
@@ -21,5 +24,14 @@ public class GameObject extends DataObject {
 
     public String getImageUrl() {
         return mImageUrl;
+    }
+
+    public Type getType() {
+        return mType;
+    }
+
+    public enum Type {
+        ITEM,
+        US_LICENSE_PLATE
     }
 }
