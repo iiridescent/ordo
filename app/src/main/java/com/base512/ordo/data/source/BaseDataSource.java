@@ -4,6 +4,9 @@ import com.base512.ordo.data.DataObject;
 
 import java.util.LinkedHashMap;
 
+/**
+ * Interface for anything that provides data
+ */
 public interface BaseDataSource {
     interface LoadDataCallback<T extends Object> extends AccessDataCallback {
         void onDataLoaded(LinkedHashMap<String, T> data);

@@ -6,6 +6,9 @@ import java.util.ArrayList;
  * Created by Thomas on 2/23/2017.
  */
 
+/**
+ * List of guesses user has inputted in the test section of game-play
+ */
 public class UserGameGuesses extends DataObject {
 
     private final String mGameId;

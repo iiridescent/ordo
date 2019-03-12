@@ -12,6 +12,9 @@ import com.base512.ordo.data.source.DataModel;
 import com.base512.ordo.data.User;
 import com.base512.ordo.data.source.BaseDataSource;
 
+/**
+ * Super simple (insecure) login screen that requires a passphrase
+ */
 public class LoginActivity extends OrdoActivity {
 
     private ImageView mUnlockButton;
@@ -53,7 +56,8 @@ public class LoginActivity extends OrdoActivity {
 
             @Override
             public void onDataError() {
-                Toast.makeText(LoginActivity.this, "FAILURRRE", Toast.LENGTH_SHORT).show();
+                // TODO: This should be loaded from XML resources
+                Toast.makeText(LoginActivity.this, "not a recognized user", Toast.LENGTH_SHORT).show();
             }
         });
     }

@@ -2,6 +2,11 @@ package com.base512.ordo.data;
 
 import java.util.ArrayList;
 
+/**
+ * An object to be memorized in a game
+ *
+ * {@link mNames} is a list because any object can have multiple correct names
+ */
 public class GameObject extends DataObject {
 
     private final ArrayList<String> mNames;

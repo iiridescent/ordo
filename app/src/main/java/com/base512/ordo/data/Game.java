@@ -4,6 +4,9 @@ package com.base512.ordo.data;
  * Created by Thomas on 2/21/2017.
  */
 
+/**
+ * Data object for Game
+ */
 public class Game extends DataObject {
     public static class Config {
         private final int mNumberOfObjects;
@@ -35,12 +38,24 @@ public class Game extends DataObject {
 
     private final State mState;
 
+    /**
+     * List of objects to be memorized
+     */
     private final GameObject[] mGameObjects;
 
+    /**
+     * User ID of the creator of this game
+     */
     private final String mCreator;
 
+    /**
+     * Linux epoch milliseconds timestamp at the beginning of this game
+     */
     private final long mStartTime;
 
+    /**
+     * Seconds until study section ends and test section begins
+     */
     private final int mStudyDuration;
 
     public Game(String id, State state, GameObject[] gameObjects, String creator, long startTime, int studyDuration) {

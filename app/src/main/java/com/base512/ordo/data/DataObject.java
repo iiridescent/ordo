@@ -1,5 +1,10 @@
 package com.base512.ordo.data;
 
+/**
+ * Base data object
+ *
+ * Created with the assumption that every object has a UID
+ */
 public abstract class DataObject {
     private final String mId;
 

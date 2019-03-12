@@ -7,7 +7,6 @@ import android.os.Bundle;
 import android.os.SystemClock;
 import android.support.graphics.drawable.AnimatedVectorDrawableCompat;
 import android.util.DisplayMetrics;
-import android.util.Log;
 import android.widget.ImageView;
 
 import com.base512.ordo.data.Game;
@@ -126,7 +125,7 @@ public class GameStudyActivity extends BaseGameActivity {
             }
         });
 
-        mTimerView.setDenominator(timeElapsedSeconds);
+        mTimerView.setTotal(timeElapsedSeconds);
     }
 
     private void updateTimingRunnable(TimeUpdateRunnable timeUpdateRunnable, long delay) {

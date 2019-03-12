@@ -18,9 +18,6 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.view.View;
 
-/**
- * Utilities for Activities
- */
 public class ActivityUtils {
     public static void openActivity(@NonNull Activity activity, @NonNull Class<?> activityToOpen) {
         openActivity(activity, activityToOpen, null, null);

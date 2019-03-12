@@ -16,6 +16,9 @@ import com.base512.ordo.util.ActivityUtils;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
+/**
+ * Main game options screen
+ */
 public class MenuActivity extends OrdoActivity {
 
     @BindView(R.id.newGameButton)

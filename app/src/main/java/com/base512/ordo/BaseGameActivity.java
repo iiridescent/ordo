@@ -17,6 +17,14 @@ import com.base512.ordo.data.Game;
 import com.base512.ordo.data.source.DataModel;
 import com.base512.ordo.util.ActivityUtils;
 
+/**
+ * Base class for all activities in game-play flow
+ *
+ * Wraps child content with header and home button and provides an exit confirmation dialog
+ * when either the home button is clicked or on system back navigation event.
+ *
+ * When dialog is confirmed, BaseGameActivity handles calling the data model to finish current game.
+ */
 public class BaseGameActivity extends OrdoActivity {
 
     FrameLayout mChildContainer;

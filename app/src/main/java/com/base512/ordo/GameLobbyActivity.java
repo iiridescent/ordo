@@ -7,9 +7,12 @@ import android.animation.ValueAnimator;
 import android.content.Intent;
 import android.content.res.ColorStateList;
 import android.graphics.Color;
+import android.graphics.Interpolator;
 import android.os.Bundle;
 import android.support.v4.content.ContextCompat;
 import android.view.View;
+import android.view.animation.BounceInterpolator;
+import android.view.animation.CycleInterpolator;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -22,9 +25,16 @@ import com.base512.ordo.data.source.game.GameRepository;
 import com.base512.ordo.ui.EasingType;
 import com.base512.ordo.ui.SineInterpolator;
 
+import java.math.BigInteger;
+
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
+/**
+ * Pre-game waiting screen
+ *
+ * While this screen is open, other players can attempt to join this game using the code
+ */
 public class GameLobbyActivity extends BaseGameActivity implements GameRepository.OnGameStateChangeListener {
 
     @BindView(R.id.gameStartButton)
@@ -40,7 +50,6 @@ public class GameLobbyActivity extends BaseGameActivity implements GameRepositor
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_game_lobby);
-        ButterKnife.bind(this);
 
         setupViews();
         setupLobby();
@@ -94,7 +103,7 @@ public class GameLobbyActivity extends BaseGameActivity implements GameRepositor
             animator.setEvaluator(new ArgbEvaluator());
             animator.setRepeatMode(ObjectAnimator.REVERSE);
             animator.setRepeatCount(ValueAnimator.INFINITE);
-            animator.setInterpolator(new SineInterpolator(EasingType.Type.INOUT));
+            animator.setInterpolator(new CycleInterpolator(0.25f));
             animator.setDuration(1500);
         }
 

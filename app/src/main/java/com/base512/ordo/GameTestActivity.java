@@ -14,7 +14,6 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.base512.ordo.data.Game;
-import com.base512.ordo.data.GameObject;
 import com.base512.ordo.data.UserGameGuesses;
 import com.base512.ordo.data.source.BaseDataSource;
 import com.base512.ordo.data.source.DataModel;
@@ -47,11 +46,11 @@ public class GameTestActivity extends BaseGameActivity {
     }
 
     private void setupViews() {
-        mNextButton = (Button) findViewById(R.id.gameTestResultsButton);
-        mGuessButton = (ImageView) findViewById(R.id.gameTestGuessButton);
-        mGuessField = (EditText) findViewById(R.id.gameTestGuessField);
-        mGuessCounter = (CounterView) findViewById(R.id.testCounterView);
-        mGuessContainer = (LinearLayout) findViewById(R.id.gameTestGuessContainer);
+        mNextButton = findViewById(R.id.gameTestResultsButton);
+        mGuessButton = findViewById(R.id.gameTestGuessButton);
+        mGuessField = findViewById(R.id.gameTestGuessField);
+        mGuessCounter = findViewById(R.id.testCounterView);
+        mGuessContainer = findViewById(R.id.gameTestGuessContainer);
 
         mNextButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -69,14 +68,13 @@ public class GameTestActivity extends BaseGameActivity {
         mGuessField.setOnEditorActionListener(new TextView.OnEditorActionListener() {
             @Override
             public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
-                boolean handled = false;
                 if (actionId == EditorInfo.IME_ACTION_DONE) {
                     if(!mGuessField.getText().toString().isEmpty() && !mGuessField.getText().toString().equals(" ")) {
                         guess();
                     }
-                    handled = true;
+                    return true;
                 }
-                return handled;
+                return false;
             }
         });
 
@@ -117,7 +115,7 @@ public class GameTestActivity extends BaseGameActivity {
         DataModel.getDataModel().getCurrentGame(new BaseDataSource.GetDataCallback<Game>() {
             @Override
             public void onDataLoaded(Game data) {
-                mGuessCounter.setDenominator(data.getGameObjects().length);
+                mGuessCounter.setTotal(data.getGameObjects().length);
                 mGuesses = new ArrayList<>();
             }
 
@@ -141,7 +139,7 @@ public class GameTestActivity extends BaseGameActivity {
                 CalligraphyUtils.applyFontToTextView(GameTestActivity.this, guessLabel, CalligraphyConfig.get().getFontPath());
 
                 mGuessContainer.addView(guessLabel);
-                mGuessCounter.setNumerator(mGuesses.size());
+                mGuessCounter.setCount(mGuesses.size());
                 mGuessField.setText("");
 
                 if(mGuesses.size() == data.getGameObjects().length) {

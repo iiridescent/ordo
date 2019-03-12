@@ -17,6 +17,10 @@ import com.base512.ordo.R;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
+
+/**
+ * An editable number field with '+' and '-' buttons for manually adjusting
+ */
 public class NumberConfigView extends ConstraintLayout implements TextWatcher, View.OnClickListener {
 
     @BindView(R.id.numberConfigAddButton)
@@ -31,9 +35,9 @@ public class NumberConfigView extends ConstraintLayout implements TextWatcher, V
     @BindView(R.id.numberConfigLabel)
     TextView mLabel;
 
-    private int mMinValue = Integer.MIN_VALUE;
+    private int mMinValue;
 
-    private int mMaxValue = Integer.MAX_VALUE;
+    private int mMaxValue;
 
     private boolean mWasEdited = false;
 
@@ -62,10 +66,6 @@ public class NumberConfigView extends ConstraintLayout implements TextWatcher, V
 
         mAddButton.setOnClickListener(this);
         mSubtractButton.setOnClickListener(this);
-    }
-
-    public NumberConfigView(Context context) {
-        this(context, null);
     }
 
     private void addToValue(int valueToAdd) {
