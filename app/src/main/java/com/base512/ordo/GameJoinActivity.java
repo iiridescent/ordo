@@ -1,6 +1,5 @@
 package com.base512.ordo;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.view.KeyEvent;
 import android.view.View;
@@ -15,6 +14,12 @@ import com.base512.ordo.data.source.BaseDataSource;
 import com.base512.ordo.data.source.DataModel;
 import com.base512.ordo.util.ActivityUtils;
 
+/**
+ * Screen for joining an open multiplayer game
+ *
+ * When {@link mJoinButton} is clicked, game model attempts to join game with
+ * code provided in {@link mGameCodeField}
+ */
 public class GameJoinActivity extends BaseGameActivity {
 
     private Button mExitButton;
@@ -31,7 +36,7 @@ public class GameJoinActivity extends BaseGameActivity {
     }
 
     private void setupViews() {
-        mExitButton = (Button) findViewById(R.id.gameExitButton);
+        mExitButton = findViewById(R.id.gameExitButton);
         mExitButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -39,7 +44,7 @@ public class GameJoinActivity extends BaseGameActivity {
             }
         });
 
-        mJoinButton = (Button) findViewById(R.id.gameJoinButton);
+        mJoinButton = findViewById(R.id.gameJoinButton);
         mJoinButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -47,7 +52,7 @@ public class GameJoinActivity extends BaseGameActivity {
             }
         });
 
-        mGameCodeField = (EditText) findViewById(R.id.joinGameCodeLabel);
+        mGameCodeField = findViewById(R.id.joinGameCodeLabel);
         mGameCodeField.setOnEditorActionListener(new TextView.OnEditorActionListener() {
             @Override
             public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {

@@ -11,6 +11,13 @@ import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
  * Created by Thomas on 2/23/2017.
  */
 
+/**
+ * Base class for all Ordo activities
+ *
+ * Modifies default animation transition (there could be a better way to do this) and
+ * wraps Calligraphy
+ */
+
 public class OrdoActivity extends AppCompatActivity {
 
     private boolean mShouldFinish = false;

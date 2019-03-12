@@ -29,6 +29,9 @@ import butterknife.ButterKnife;
  * Created by Thomas on 2/25/2017.
  */
 
+/**
+ * Screen for uploading new game objects
+ */
 public class GameObjectUploadActivity extends BaseGameActivity {
 
     static final int REQUEST_GALLERY = 1;

@@ -12,6 +12,9 @@ import com.base512.ordo.data.UserGameGuesses;
 import com.base512.ordo.data.source.BaseDataSource;
 import com.base512.ordo.data.source.DataModel;
 
+/**
+ * Screen that shows personal score for completed game, along with high score
+ */
 public class GameResultsActivity extends BaseGameActivity {
 
     private Button mMenuButton;

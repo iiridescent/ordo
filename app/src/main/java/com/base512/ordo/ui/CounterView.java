@@ -6,13 +6,20 @@ import android.util.AttributeSet;
 import android.widget.TextView;
 
 import com.base512.ordo.R;
+import com.base512.ordo.util.StringUtils;
 
+
+/**
+ * View for displaying progress as "{quantity} / {total}"
+ */
 public class CounterView extends TextView {
-    private int mNumerator;
-    private int mDenominator;
+    private int mCount;
+    private int mTotal;
 
     private String mSeparator;
     private boolean mPadNumber;
+
+    private static final String DEFAULT_SEPARATOR = "/";
 
     public CounterView(Context context) {
         this(context, null);
@@ -24,8 +31,8 @@ public class CounterView extends TextView {
 
     public CounterView(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
-        mNumerator = 0;
-        mDenominator = 0;
+        mCount = 0;
+        mTotal = 0;
 
         TypedArray attributes = context.getTheme().obtainStyledAttributes(
                 attrs,
@@ -34,7 +41,7 @@ public class CounterView extends TextView {
 
         try {
             String separator = attributes.getString(R.styleable.CounterView_separator);
-            mSeparator = separator == null ? "/" : separator;
+            mSeparator = separator == null ? DEFAULT_SEPARATOR : separator;
             mPadNumber = attributes.getBoolean(R.styleable.CounterView_padNumber, false);
         } finally {
             attributes.recycle();
@@ -43,19 +50,19 @@ public class CounterView extends TextView {
         updateCounterText();
     }
 
-    public void setNumerator(int numerator) {
-        mNumerator = numerator;
+    public void setCount(int numerator) {
+        mCount = numerator;
         updateCounterText();
     }
 
-    public void setDenominator(int denominator) {
-        mDenominator = denominator;
+    public void setTotal(int denominator) {
+        mTotal = denominator;
         updateCounterText();
     }
 
     private void updateCounterText() {
-        String numeratorText = mPadNumber ? String.format("%02d", mNumerator) : String.valueOf(mNumerator);
-        String denominatorText = mPadNumber ? String.format("%02d", mDenominator) : String.valueOf(mDenominator);
+        String numeratorText = mPadNumber ? StringUtils.leftZeroPad(mCount, 2) : String.valueOf(mCount);
+        String denominatorText = mPadNumber ? StringUtils.leftZeroPad(mTotal, 2) : String.valueOf(mTotal);
         setText(numeratorText+mSeparator+denominatorText);
     }
 }

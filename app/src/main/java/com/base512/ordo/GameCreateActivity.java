@@ -12,6 +12,14 @@ import com.base512.ordo.data.source.BaseDataSource;
 import com.base512.ordo.data.source.DataModel;
 import com.base512.ordo.ui.NumberConfigView;
 
+/**
+ * Configuration screen for creating a new game
+ *
+ * Provides three options:
+ * <li>object count
+ * <li>game duration
+ * <li>object type
+ */
 public class GameCreateActivity extends BaseGameActivity {
 
     private NumberConfigView mGameObjectsField;
@@ -29,10 +37,10 @@ public class GameCreateActivity extends BaseGameActivity {
     }
 
     public void setupViews() {
-        mCreateButton = (Button) findViewById(R.id.createButton);
-        mGameObjectsField = (NumberConfigView) findViewById(R.id.gameCreateObjectsField);
-        mGameDurationField = (NumberConfigView) findViewById(R.id.gameCreateDurationField);
-        mTypeSelector = (RadioGroup) findViewById(R.id.gameCreateTypeSelector);
+        mCreateButton = findViewById(R.id.createButton);
+        mGameObjectsField = findViewById(R.id.gameCreateObjectsField);
+        mGameDurationField = findViewById(R.id.gameCreateDurationField);
+        mTypeSelector = findViewById(R.id.gameCreateTypeSelector);
 
         mCreateButton.setOnClickListener(new View.OnClickListener() {
             @Override

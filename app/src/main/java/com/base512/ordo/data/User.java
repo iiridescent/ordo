@@ -4,6 +4,9 @@ package com.base512.ordo.data;
  * Created by Thomas on 2/21/2017.
  */
 
+/**
+ * Data class for game User
+ */
 public final class User extends DataObject {
 
     /** The number of games this user has played and finished **/
