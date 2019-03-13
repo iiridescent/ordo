@@ -18,8 +18,6 @@ public interface GameDataSource {
 
     void getGame(@NonNull String gameId, BaseDataSource.GetDataCallback<Game> gameDataCallback);
 
-    void setGameState(@NonNull String gameId, @NonNull Game.State state, @NonNull Context context, @NonNull BaseDataSource.GetDataCallback<Game> updateGameCallback);
-
     void createGame(@NonNull Game.Config config, @NonNull Context context, BaseDataSource.GetDataCallback<Game> gameDataCallback);
 
     void getGuesses(@NonNull BaseDataSource.GetDataCallback<UserGameGuesses> userGameGuessesDataCallback);

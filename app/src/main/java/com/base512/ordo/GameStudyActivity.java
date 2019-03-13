@@ -16,30 +16,39 @@ import com.base512.ordo.data.source.DataModel;
 import com.base512.ordo.util.ActivityUtils;
 import com.bumptech.glide.Glide;
 
+import butterknife.BindView;
+import butterknife.ButterKnife;
+
+/**
+ * Screen with grid of objects to memorize before timer runs out
+ */
 public class GameStudyActivity extends BaseGameActivity {
 
     // Game object container layout
-    private FlexboxLayout mContainerLayout;
+    @BindView(R.id.gameFlexbox)
+    FlexboxLayout mContainerLayout;
 
-    private CounterView mTimerView;
+    @BindView(R.id.gameTimerView)
+    CounterView mTimerView;
 
     private final TimeUpdateRunnable mTimeUpdateRunnable = new TimeUpdateRunnable();
+
+    // Milliseconds between each time elapsed event
+    final static int TICK_DELAY_MS = 25;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_game_study);
-        setupViews();
+        ButterKnife.bind(this);
         setupGame();
         displayRows();
     }
 
-    public void setupViews() {
-        mContainerLayout = (FlexboxLayout) findViewById(R.id.study_row_container);
-
-        mTimerView = (CounterView) findViewById(R.id.gameTimerView);
-    }
-
+    /**
+     * Set up timer view and update label ({@link BaseGameActivity#setLabel(String)}) if
+     * game is multi-player and current user is not owner
+     */
     public void setupGame() {
         DataModel.getDataModel().getCurrentGame(new BaseDataSource.GetDataCallback<Game>() {
             @Override
@@ -57,6 +66,9 @@ public class GameStudyActivity extends BaseGameActivity {
         });
     }
 
+    /**
+     * Load images from URLs (or cache, using Glide) into Flexbox view
+     */
     public void displayRows() {
         final AnimatedVectorDrawableCompat loadingAnimation = AnimatedVectorDrawableCompat.create(GameStudyActivity.this, R.drawable.ic_memory_animated);
         loadingAnimation.start();
@@ -106,6 +118,11 @@ public class GameStudyActivity extends BaseGameActivity {
         });
     }
 
+    /**
+     * Update timer view while study time remains,
+     * then stop timer runnable and open test screen.
+     * @param startTime epoch timestamp at beginning of game
+     */
     private void updateTime(long startTime) {
         long timeElapsed = System.currentTimeMillis() - startTime;
         final int timeElapsedSeconds = (int) timeElapsed / 1000;
@@ -114,6 +131,7 @@ public class GameStudyActivity extends BaseGameActivity {
             @Override
             public void onDataLoaded(Game data) {
                 if(timeElapsedSeconds >= data.getStudyDuration()) {
+                    // Time's up, go to test portion of game
                     removeTimingRunnable(mTimeUpdateRunnable);
                     goToTest();
                 }
@@ -159,26 +177,29 @@ public class GameStudyActivity extends BaseGameActivity {
     private final class TimeUpdateRunnable implements Runnable {
         @Override
         public void run() {
+            // Time at beginning of update
             final long startTime = SystemClock.elapsedRealtime();
 
             DataModel.getDataModel().getCurrentGame(new BaseDataSource.GetDataCallback<Game>() {
                 @Override
                 public void onDataLoaded(Game data) {
                     if (data.getState() == Game.State.STUDY) {
+                        // Update timer view
                         updateTime(data.getStartTime());
 
-                        final int period = 25;
-
+                        // Time at end of update
                         final long endTime = SystemClock.elapsedRealtime();
-                        final long delay = Math.max(0, startTime + period - endTime);
+                        // Correct for difference between update start and end
+                        final long delay = Math.max(0, startTime + TICK_DELAY_MS - endTime);
 
+                        // Perform another tick after {delay} milliseconds
                         updateTimingRunnable(TimeUpdateRunnable.this, delay);
                     }
                 }
 
                 @Override
                 public void onDataError() {
-                    // TODO Idk what to do here
+                    // TODO: Handle game model unable to load during time update runnable
                 }
             });
         }

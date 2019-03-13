@@ -22,8 +22,6 @@ import com.base512.ordo.data.Game;
 import com.base512.ordo.data.source.BaseDataSource;
 import com.base512.ordo.data.source.DataModel;
 import com.base512.ordo.data.source.game.GameRepository;
-import com.base512.ordo.ui.EasingType;
-import com.base512.ordo.ui.SineInterpolator;
 
 import java.math.BigInteger;
 
@@ -57,6 +55,7 @@ public class GameLobbyActivity extends BaseGameActivity implements GameRepositor
     }
 
     private void setupViews() {
+        ButterKnife.bind(this);
         mStartButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -83,6 +82,9 @@ public class GameLobbyActivity extends BaseGameActivity implements GameRepositor
         });
     }
 
+    /**
+     * Set up pulsing animation for game code
+     */
     private void setupAnimation() {
         int accentColor = ContextCompat.getColor(this, R.color.colorAccent);
 
@@ -116,8 +118,7 @@ public class GameLobbyActivity extends BaseGameActivity implements GameRepositor
         DataModel.getDataModel().setGameState(Game.State.STUDY, new BaseDataSource.UpdateDataCallback() {
             @Override
             public void onDataUpdated(String id) {
-                Intent intent = new Intent(GameLobbyActivity.this, GameStudyActivity.class);
-                startActivity(intent);
+                goToStudy();
                 requestFinish();
             }
 
@@ -129,9 +130,14 @@ public class GameLobbyActivity extends BaseGameActivity implements GameRepositor
     }
 
     @Override
-    public void onStateChanged(Game.State newState) {
+    public void onGameStateChanged(Game.State newState) {
         if(newState == Game.State.STUDY) {
             startGame();
         }
+    }
+
+    private void goToStudy() {
+        Intent intent = new Intent(GameLobbyActivity.this, GameStudyActivity.class);
+        startActivity(intent);
     }
 }

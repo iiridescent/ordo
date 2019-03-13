@@ -14,7 +14,7 @@ import com.base512.ordo.data.source.user.UserModel;
 
 public class DataModel {
 
-    /** The single instance of this data model that exists for the life of the application. */
+    /** The single instance of this data model that exists for the lifetime of the application. */
     private static final DataModel sDataModel = new DataModel();
 
     private Context mContext;
@@ -22,12 +22,15 @@ public class DataModel {
     // The model from which user data are fetched
     private UserModel mUserModel;
 
-    // The model from which game object are fetched
+    // The model from which game object data are fetched
     private GameObjectModel mGameObjectModel;
 
     // The model from which game data are fetched
     private GameModel mGameModel;
 
+    /**
+     * @return DataModel singleton
+     */
     public static DataModel getDataModel() {
         return sDataModel;
     }
@@ -36,7 +39,7 @@ public class DataModel {
 
     public void setContext(Context context) {
         if (mContext != null) {
-            throw new IllegalStateException("context has already been set");
+            throw new IllegalStateException("Context has already been set");
         }
         mContext = context.getApplicationContext();
 

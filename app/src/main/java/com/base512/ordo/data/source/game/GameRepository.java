@@ -23,7 +23,6 @@ import com.base512.ordo.data.UserGameGuesses;
 import com.base512.ordo.data.source.BaseDataSource;
 import com.base512.ordo.data.source.DataModel;
 
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -62,6 +61,11 @@ public class GameRepository implements GameDataSource {
 
     GameRepository() {}
 
+    /**
+     * Load current game from {@link SharedPreferences}
+     * @param context
+     * @param gameLoadDataCallback
+     */
     @Override
     public void getCurrentGame(@NonNull Context context, @NonNull final BaseDataSource.GetDataCallback<Game> gameLoadDataCallback) {
         SharedPreferences prefs = getSharedPreferences(context);
@@ -203,7 +207,7 @@ public class GameRepository implements GameDataSource {
 
                             Game.State state = Game.State.values()[dataSnapshot.getValue(Integer.class)];
                             if(data.getState() != state) {
-                                mOnGameStateChangeListener.onStateChanged(state);
+                                mOnGameStateChangeListener.onGameStateChanged(state);
                             }
                         }
 
@@ -230,9 +234,6 @@ public class GameRepository implements GameDataSource {
     @Override
     public void getGame(@NonNull final String gameId, final BaseDataSource.GetDataCallback<Game> gameLoadDataCallback) {
         final DatabaseReference gameReference = getDatabaseReference().child(gameId);
-
-/*        TaskCompletionSource<Game> gameLoadTaskCompletionSource = new TaskCompletionSource<>();
-        Task<Game> gameLoadTask = gameLoadTaskCompletionSource.getTask();*/
 
         gameReference.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
@@ -305,11 +306,12 @@ public class GameRepository implements GameDataSource {
         });
     }
 
-    @Override
-    public void setGameState(@NonNull String gameId, @NonNull Game.State state, @NonNull Context context, @NonNull BaseDataSource.GetDataCallback<Game> updateGameCallback) {
-
-    }
-
+    /**
+     * Creates new game and adds game objects
+     * @param config
+     * @param context
+     * @param gameDataCallback
+     */
     @Override
     public void createGame(@NonNull final Game.Config config, @NonNull final Context context, final BaseDataSource.GetDataCallback<Game> gameDataCallback) {
         final DatabaseReference databaseReference = getDatabaseReference();
@@ -317,9 +319,11 @@ public class GameRepository implements GameDataSource {
         final TaskCompletionSource<String> gameCodeTaskCompletionSource = new TaskCompletionSource<>();
         final Task<String> gameCodeTask = gameCodeTaskCompletionSource.getTask();
 
+        // Generate multiplayer game code
         generateGameCode(new BaseDataSource.GetDataCallback<String>() {
             @Override
             public void onDataLoaded(String key) {
+                // Signal async completion and return key
                 gameCodeTaskCompletionSource.setResult(key);
             }
 
@@ -335,15 +339,20 @@ public class GameRepository implements GameDataSource {
 
         final GameObject[] gameObjects = new GameObject[config.getNumberOfObjects()];
 
+        // Load game objects for type specified in game object
         DataModel.getDataModel().getGameObjectsForType(config.getObjectType(), new BaseDataSource.LoadDataCallback<GameObject>() {
             @Override
             public void onDataLoaded(LinkedHashMap<String, GameObject> data) {
-                ArrayList<GameObject> availableGameObjects = new ArrayList<>(((LinkedHashMap<String, GameObject>) data.clone()).values());
+                // Convert map to list
+                ArrayList<GameObject> availableGameObjects = new ArrayList<>(data.values());
+                // Randomly pick number of objects specified in game config
                 for(int i = 0; i < config.getNumberOfObjects(); i++) {
                     int randomIndex = (int) Math.min(Math.round(Math.random() * availableGameObjects.size()), availableGameObjects.size()-1);
+                    // Add to array of objects to be stored in game
                     gameObjects[i] = availableGameObjects.get(randomIndex);
                     availableGameObjects.remove(randomIndex);
                 }
+                // Signal async completion
                 gameObjectsLoadTaskCompletionSource.setResult(null);
             }
 
@@ -354,25 +363,35 @@ public class GameRepository implements GameDataSource {
             }
         });
 
+        // When code has been generated and random objects have been loaded and randomly picked
         Tasks.whenAll(gameCodeTask, gameObjectsLoadTask).addOnCompleteListener(new OnCompleteListener<Void>() {
             @Override
             public void onComplete(@NonNull Task<Void> task) {
+                // Load reference from Firebase
                 DatabaseReference gameReference = databaseReference.child(gameCodeTask.getResult());
-                HashMap<String, Object> gameValues = new HashMap<>();
+                // Map for storing JSON data in Firebase
+                HashMap<String, Object> gameData = new HashMap<>();
 
+                /*
+                IDs are stored this way because Firebase Realtime Database has
+                no native support for arrays:
+                https://firebase.googleblog.com/2014/04/best-practices-arrays-in-firebase.html
+                 */
                 HashMap<String, Boolean> gameObjectIds = new HashMap<>();
 
                 for(GameObject gameObject : gameObjects) {
                     gameObjectIds.put(gameObject.getId(), true);
                 }
 
-                gameValues.put(STATE, Game.State.WAITING.ordinal());
-                gameValues.put(CREATOR, DataModel.getDataModel().getUser().getId());
-                gameValues.put(OBJECTS, gameObjectIds);
-                gameValues.put(STUDY_DURATION, config.getStudyDuration());
-                gameReference.updateChildren(gameValues).addOnCompleteListener(new OnCompleteListener<Void>() {
+                gameData.put(STATE, Game.State.WAITING.ordinal());
+                gameData.put(CREATOR, DataModel.getDataModel().getUser().getId());
+                gameData.put(OBJECTS, gameObjectIds);
+                gameData.put(STUDY_DURATION, config.getStudyDuration());
+                // Push data to Firebase
+                gameReference.updateChildren(gameData).addOnCompleteListener(new OnCompleteListener<Void>() {
                     @Override
                     public void onComplete(@NonNull Task<Void> task) {
+                        // Create game object to be consumed by app
                         Game game = new Game(
                                 gameCodeTask.getResult(),
                                 Game.State.WAITING,
@@ -381,6 +400,8 @@ public class GameRepository implements GameDataSource {
                                 Long.MIN_VALUE,
                                 config.getStudyDuration()
                         );
+
+
                         SharedPreferences prefs = getSharedPreferences(context);
                         SharedPreferences.Editor editor = prefs.edit();
 
@@ -390,6 +411,7 @@ public class GameRepository implements GameDataSource {
                             gameObjectIds.add(gameObject.getId());
                         }
 
+                        // Save data to SharedPreferences for offline (?) access
                         editor.putString(CURRENT_GAME_ID, game.getId());
                         editor.putString(CURRENT_GAME_CREATOR, game.getCreator());
                         editor.putInt(CURRENT_GAME_STATE, game.getState().ordinal());
@@ -462,6 +484,10 @@ public class GameRepository implements GameDataSource {
         });
     }
 
+    /**
+     * Generate max 4-digit code for other players to use when joining game
+     * @param getGameCodeCallback
+     */
     private void generateGameCode(final BaseDataSource.GetDataCallback<String> getGameCodeCallback) {
         DatabaseReference databaseReference = getDatabaseReference();
 
@@ -505,6 +531,9 @@ public class GameRepository implements GameDataSource {
         return sPrefs;
     }
 
+    /**
+     * Listener for updating UI when players join or leave multi-player games
+     */
     public interface OnGameRosterChangeListener {
         void onPlayerAdded(String newPlayerId);
 
@@ -512,6 +541,6 @@ public class GameRepository implements GameDataSource {
     }
 
     public interface OnGameStateChangeListener {
-        void onStateChanged(Game.State newState);
+        void onGameStateChanged(Game.State newState);
     }
 }

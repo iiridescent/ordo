@@ -12,14 +12,19 @@ import com.base512.ordo.data.source.DataModel;
 import com.base512.ordo.data.User;
 import com.base512.ordo.data.source.BaseDataSource;
 
+import butterknife.BindView;
+import butterknife.ButterKnife;
+
 /**
  * Super simple (insecure) login screen that requires a passphrase
  */
 public class LoginActivity extends OrdoActivity {
 
-    private ImageView mUnlockButton;
+    @BindView(R.id.unlockButton)
+    ImageView mUnlockButton;
 
-    private EditText mLoginInput;
+    @BindView(R.id.loginInput)
+    EditText mLoginInput;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -31,9 +36,7 @@ public class LoginActivity extends OrdoActivity {
 
     private void setupViews() {
 
-        mLoginInput = (EditText) findViewById(R.id.loginInput);
-
-        mUnlockButton = (ImageView) findViewById(R.id.unlockButton);
+        ButterKnife.bind(this);
 
         mUnlockButton.setOnClickListener(new View.OnClickListener() {
             @Override

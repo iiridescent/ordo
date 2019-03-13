@@ -121,6 +121,9 @@ public class GameObjectUploadActivity extends BaseGameActivity {
         addNameField();
     }
 
+    /**
+     * Create new line for adding alternate name for object
+     */
     private void addNameField() {
         EditText editText = new EditText(this, null, R.style.NameFieldStyle, R.style.NameFieldStyle);
         CalligraphyUtils.applyFontToTextView(this, editText, CalligraphyConfig.get().getFontPath());
@@ -133,6 +136,9 @@ public class GameObjectUploadActivity extends BaseGameActivity {
         mNamesContainer.addView(editText);
     }
 
+    /**
+     * Run fun camera icon animation
+     */
     private void startAnimating() {
         mImageAnimation = AnimatedVectorDrawableCompat.create(this, R.drawable.camera_phone_anim);
         mImageAnimationReverse = AnimatedVectorDrawableCompat.create(this, R.drawable.camera_phone_anim_reverse);
@@ -145,7 +151,7 @@ public class GameObjectUploadActivity extends BaseGameActivity {
     }
 
     // FIXME: 3/21/2017
-    // This needs to use multiple objects as input
+    // This should be able to use multiple objects as input
 
     private void attemptUpload() {
         ArrayList<String> objectNames = new ArrayList<>();
@@ -224,6 +230,9 @@ public class GameObjectUploadActivity extends BaseGameActivity {
         goToMenu();
     }
 
+    /**
+     * Runnable for running and reversing camera animation
+     */
     class CameraIconAnimateRunnable implements Runnable {
         @Override
         public void run() {
@@ -242,8 +251,10 @@ public class GameObjectUploadActivity extends BaseGameActivity {
         }
     }
 
+    /**
+     * Runnable for updating view with "flash" effect
+     */
     class CameraIconFlashRunnable implements Runnable {
-
         @Override
         public void run() {
             if(!mInFlash) {

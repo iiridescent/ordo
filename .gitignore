@@ -62,8 +62,6 @@ build/
 ## OS Specific
 .DS_Store
 
-# Happy Trails gitignore file
-
 # Android Studio
 *.iml
 .idea
@@ -73,14 +71,9 @@ build
 *.iws
 *.ipr
 
-# Our App Library folder
-
-app/libs/
-
-
 #built application files
 *.apk
 *.ap_
 
-ParseStarterProject/build
-ParseStarterProject/ParseStarterProject/build
+# Google Services
+google-services.json

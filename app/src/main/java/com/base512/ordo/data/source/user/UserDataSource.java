@@ -13,6 +13,8 @@ public interface UserDataSource {
 
     void getUser(@NonNull String keyCode, @NonNull BaseDataSource.GetDataCallback<User> getUserCallback);
 
+    void createUser(@NonNull String keyCode, @NonNull BaseDataSource.GetDataCallback<User> createUserCallback);
+
     void setHighScore(@NonNull String keyCode, int highScore, @NonNull Context context, @NonNull BaseDataSource.UpdateDataCallback updateUserCallback);
 
     void addGamesPlayed(@NonNull String keyCode, @NonNull Context context, @NonNull BaseDataSource.UpdateDataCallback updateUserCallback);

@@ -12,6 +12,9 @@ import com.base512.ordo.data.source.BaseDataSource;
 import com.base512.ordo.data.source.DataModel;
 import com.base512.ordo.ui.NumberConfigView;
 
+import butterknife.BindView;
+import butterknife.ButterKnife;
+
 /**
  * Configuration screen for creating a new game
  *
@@ -22,11 +25,14 @@ import com.base512.ordo.ui.NumberConfigView;
  */
 public class GameCreateActivity extends BaseGameActivity {
 
-    private NumberConfigView mGameObjectsField;
-    private NumberConfigView mGameDurationField;
-    private RadioGroup mTypeSelector;
-
-    private Button mCreateButton;
+    @BindView(R.id.gameCreateObjectsField)
+    NumberConfigView mGameObjectsField;
+    @BindView(R.id.gameCreateDurationField)
+    NumberConfigView mGameDurationField;
+    @BindView(R.id.gameCreateTypeSelector)
+    RadioGroup mTypeSelector;
+    @BindView(R.id.gameCreateButton)
+    Button mCreateButton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -37,11 +43,7 @@ public class GameCreateActivity extends BaseGameActivity {
     }
 
     public void setupViews() {
-        mCreateButton = findViewById(R.id.createButton);
-        mGameObjectsField = findViewById(R.id.gameCreateObjectsField);
-        mGameDurationField = findViewById(R.id.gameCreateDurationField);
-        mTypeSelector = findViewById(R.id.gameCreateTypeSelector);
-
+        ButterKnife.bind(this);
         mCreateButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -50,6 +52,9 @@ public class GameCreateActivity extends BaseGameActivity {
         });
     }
 
+    /**
+     * Create new game with specified configuration, update data model, and go to lobby for game
+     */
     private void setupGameAndGoToLobby() {
         int numberOfObjects = mGameObjectsField.getValue();
         int studyDuration = mGameDurationField.getValue();
@@ -82,6 +87,9 @@ public class GameCreateActivity extends BaseGameActivity {
         });
     }
 
+    /**
+     * Return to menu because exiting this screen doesn't abort a running game
+     */
     @Override
     protected void exit() {
         goToMenu();

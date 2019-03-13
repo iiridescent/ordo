@@ -12,17 +12,26 @@ import com.base512.ordo.data.UserGameGuesses;
 import com.base512.ordo.data.source.BaseDataSource;
 import com.base512.ordo.data.source.DataModel;
 
+import butterknife.BindView;
+import butterknife.ButterKnife;
+
 /**
  * Screen that shows personal score for completed game, along with high score
  */
 public class GameResultsActivity extends BaseGameActivity {
 
-    private Button mMenuButton;
-    private Button mReplayButton;
-    private TextView mCorrectGuessesLabel;
-    private TextView mCorrectDescriptionLabel;
-    private TextView mHighScoreLabel;
-    private TextView mHighScoreDescriptionLabel;
+    @BindView(R.id.resultsMainMenuButton)
+    Button mMenuButton;
+    @BindView(R.id.resultsRestartButton)
+    Button mReplayButton;
+    @BindView(R.id.resultsCorrectGuessesLabel)
+    TextView mCorrectGuessesLabel;
+    @BindView(R.id.resultsCorrectDescriptionLabel)
+    TextView mCorrectDescriptionLabel;
+    @BindView(R.id.resultsHighScoreLabel)
+    TextView mHighScoreLabel;
+    @BindView(R.id.resultsHighScoreDescriptionLabel)
+    TextView mHighScoreDescriptionLabel;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -33,17 +42,12 @@ public class GameResultsActivity extends BaseGameActivity {
     }
 
     private void setupViews() {
-        mMenuButton = (Button) findViewById(R.id.sendToMenu);
-        mReplayButton = (Button) findViewById(R.id.replayButton);
-        mCorrectGuessesLabel = (TextView) findViewById(R.id.resultsCorrectGuessesLabel);
-        mCorrectDescriptionLabel = (TextView) findViewById(R.id.correctDescriptionLabel);
-        mHighScoreLabel = (TextView) findViewById(R.id.resultsHighScoreLabel);
-        mHighScoreDescriptionLabel = (TextView) findViewById(R.id.highScoreDescriptionLabel) ;
+        ButterKnife.bind(this);
 
         mReplayButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                replayGame();
+                restartGame();
             }
         });
         mMenuButton.setOnClickListener(new View.OnClickListener() {
@@ -54,6 +58,9 @@ public class GameResultsActivity extends BaseGameActivity {
         });
     }
 
+    /**
+     * Compare guesses to object names and generate score
+     */
     private void loadResults() {
         DataModel.getDataModel().getCurrentGame(new BaseDataSource.GetDataCallback<Game>() {
             @Override
@@ -82,6 +89,7 @@ public class GameResultsActivity extends BaseGameActivity {
                         if (correctGuesses > lastHighScore) {
                             DataModel.getDataModel().setHighScore(correctGuesses, null);
 
+                            // TODO: Localize these
                             mCorrectDescriptionLabel.setText("new high score");
                             mHighScoreDescriptionLabel.setText("last high score");
                         }
@@ -92,24 +100,30 @@ public class GameResultsActivity extends BaseGameActivity {
 
                     @Override
                     public void onDataError() {
-
+                        // TODO: Handle data error
                     }
                 });
             }
 
             @Override
             public void onDataError() {
-
+                // TODO: Handle data error
             }
         });
     }
 
-    private void replayGame() {
+    /**
+     * Shortcut to go back to game create activity
+     */
+    private void restartGame() {
         Intent intent = new Intent(this, GameCreateActivity.class);
         startActivity(intent);
         requestFinish();
     }
 
+    /**
+     * Returns to menu because exiting this screen doesn't abort a running game
+     */
     @Override
     protected void exit() {
         goToMenu();

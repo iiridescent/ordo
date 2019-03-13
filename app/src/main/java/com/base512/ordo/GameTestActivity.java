@@ -12,6 +12,7 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.base512.ordo.data.Game;
 import com.base512.ordo.data.UserGameGuesses;
@@ -24,14 +25,29 @@ import uk.co.chrisjenx.calligraphy.CalligraphyUtils;
 
 import java.util.ArrayList;
 
+import butterknife.BindView;
+import butterknife.ButterKnife;
+
+/**
+ * Screen shown after timer completes on study portion of game
+ *
+ * User attempts to correctly guess the names of as many objects as possible.
+ * Because many objects have multiple names, each guess is compared against
+ * every name for any given object.
+ */
 public class GameTestActivity extends BaseGameActivity {
 
-    private Button mNextButton;
-    private ImageView mGuessButton;
-    private EditText mGuessField;
+    @BindView(R.id.gameTestResultsButton)
+    Button mResultsButton;
+    @BindView(R.id.gameTestGuessButton)
+    ImageView mGuessButton;
+    @BindView(R.id.gameTestGuessField)
+    EditText mGuessField;
 
-    private LinearLayout mGuessContainer;
-    private CounterView mGuessCounter;
+    @BindView(R.id.gameTestGuessContainer)
+    LinearLayout mGuessContainer;
+    @BindView(R.id.gameTestCounterView)
+    CounterView mGuessCounter;
 
     private ArrayList<String> mGuesses;
 
@@ -46,13 +62,9 @@ public class GameTestActivity extends BaseGameActivity {
     }
 
     private void setupViews() {
-        mNextButton = findViewById(R.id.gameTestResultsButton);
-        mGuessButton = findViewById(R.id.gameTestGuessButton);
-        mGuessField = findViewById(R.id.gameTestGuessField);
-        mGuessCounter = findViewById(R.id.testCounterView);
-        mGuessContainer = findViewById(R.id.gameTestGuessContainer);
+        ButterKnife.bind(this);
 
-        mNextButton.setOnClickListener(new View.OnClickListener() {
+        mResultsButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 finishTest();
@@ -61,7 +73,7 @@ public class GameTestActivity extends BaseGameActivity {
         mGuessButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                guess();
+                submitGuess();
             }
         });
 
@@ -70,7 +82,7 @@ public class GameTestActivity extends BaseGameActivity {
             public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
                 if (actionId == EditorInfo.IME_ACTION_DONE) {
                     if(!mGuessField.getText().toString().isEmpty() && !mGuessField.getText().toString().equals(" ")) {
-                        guess();
+                        submitGuess();
                     }
                     return true;
                 }
@@ -111,6 +123,9 @@ public class GameTestActivity extends BaseGameActivity {
         });
     }
 
+    /**
+     * Load number of objects to guess from game model
+     */
     private void setupTest() {
         DataModel.getDataModel().getCurrentGame(new BaseDataSource.GetDataCallback<Game>() {
             @Override
@@ -121,12 +136,15 @@ public class GameTestActivity extends BaseGameActivity {
 
             @Override
             public void onDataError() {
-
+                // TODO: Stub for failure to access data model
             }
         });
     }
 
-    private void guess() {
+    /**
+     * Adds guess to local guess list and finishes test portion
+     */
+    private void submitGuess() {
         final String guess = mGuessField.getText().toString();
 
         DataModel.getDataModel().getCurrentGame(new BaseDataSource.GetDataCallback<Game>() {
@@ -142,6 +160,7 @@ public class GameTestActivity extends BaseGameActivity {
                 mGuessCounter.setCount(mGuesses.size());
                 mGuessField.setText("");
 
+                // No more guesses left, finish game and show results
                 if(mGuesses.size() == data.getGameObjects().length) {
                     finishTest();
                 }
@@ -154,10 +173,13 @@ public class GameTestActivity extends BaseGameActivity {
         });
     }
 
+    /**
+     * Disables UI and updates game model with guesses, then sends user to next activity
+     */
     private void finishTest() {
         mGuessButton.setEnabled(false);
         mGuessField.setEnabled(false);
-        mNextButton.setEnabled(false);
+        mResultsButton.setEnabled(false);
         mGuessField.clearFocus();
 
         setLoadingState(true);
@@ -175,18 +197,23 @@ public class GameTestActivity extends BaseGameActivity {
 
                     @Override
                     public void onDataError() {
-
+                        setLoadingState(false);
+                        Toast.makeText(GameTestActivity.this, "Failed to save guesses", Toast.LENGTH_SHORT);
                     }
                 });
             }
 
             @Override
             public void onDataError() {
-
+                setLoadingState(false);
+                Toast.makeText(GameTestActivity.this, "Failed to get game object", Toast.LENGTH_SHORT);
             }
         });
     }
 
+    /**
+     * Open results activity
+     */
     private void sendToResults() {
         Intent intent = new Intent(this, GameResultsActivity.class);
         startActivity(intent);

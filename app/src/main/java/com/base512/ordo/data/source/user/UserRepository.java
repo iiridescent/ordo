@@ -1,5 +1,7 @@
 package com.base512.ordo.data.source.user;
 
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -14,6 +16,8 @@ import android.support.annotation.NonNull;
 
 import com.base512.ordo.data.User;
 import com.base512.ordo.data.source.BaseDataSource;
+
+import java.util.HashMap;
 
 /**
  * Created by Thomas on 2/21/2017.
@@ -34,7 +38,24 @@ final class UserRepository implements UserDataSource {
 
     private static DatabaseReference sDatabaseReference;
 
-    UserRepository() {}
+    UserRepository() {
+    }
+
+    private static DatabaseReference getDatabaseReference() {
+        if (sDatabaseReference == null) {
+            sDatabaseReference = FirebaseDatabase.getInstance().getReference().child(USERS);
+        }
+
+        return sDatabaseReference;
+    }
+
+    private static SharedPreferences getSharedPreferences(Context context) {
+        if (sPrefs == null) {
+            sPrefs = PreferenceManager.getDefaultSharedPreferences(context.getApplicationContext());
+        }
+
+        return sPrefs;
+    }
 
     @Override
     public User getSavedUser(Context context) {
@@ -74,7 +95,7 @@ final class UserRepository implements UserDataSource {
         query.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-                if(dataSnapshot.exists() && dataSnapshot.getKey().equals(keyCode)) {
+                if (dataSnapshot.exists() && dataSnapshot.getKey().equals(keyCode)) {
                     User user = new User(
                             keyCode,
                             dataSnapshot.child(HIGH_SCORE).getValue(Integer.class),
@@ -82,7 +103,18 @@ final class UserRepository implements UserDataSource {
 
                     getUserCallback.onDataLoaded(user);
                 } else {
-                    getUserCallback.onDataError();
+                    // Create user if one doesn't exist
+                    createUser(keyCode, new BaseDataSource.GetDataCallback<User>() {
+                        @Override
+                        public void onDataLoaded(User data) {
+                            getUserCallback.onDataLoaded(data);
+                        }
+
+                        @Override
+                        public void onDataError() {
+                            getUserCallback.onDataError();
+                        }
+                    });
                 }
             }
 
@@ -94,13 +126,28 @@ final class UserRepository implements UserDataSource {
     }
 
     @Override
+    public void createUser(@NonNull final String keyCode, @NonNull final BaseDataSource.GetDataCallback<User> createUserCallback) {
+        DatabaseReference userReference = getDatabaseReference().child(keyCode);
+        HashMap<String, Object> data = new HashMap();
+        data.put(GAMES_PLAYED, 0);
+        data.put(HIGH_SCORE, 0);
+        userReference.setValue(data).addOnCompleteListener(new OnCompleteListener<Void>() {
+            @Override
+            public void onComplete(@NonNull Task<Void> task) {
+                User user = new User(keyCode, 0, 0);
+                createUserCallback.onDataLoaded(user);
+            }
+        });
+    }
+
+    @Override
     public void setHighScore(@NonNull String keyCode, int highScore, Context context, @NonNull BaseDataSource.UpdateDataCallback updateUserCallback) {
         DatabaseReference highScoreReference = getDatabaseReference().child(keyCode).child(HIGH_SCORE);
         highScoreReference.setValue(highScore);
 
         setSavedUser(context, getSavedUser(context).withHighScore(highScore));
 
-        if(updateUserCallback != null) {
+        if (updateUserCallback != null) {
             updateUserCallback.onDataUpdated(keyCode);
         }
     }
@@ -116,7 +163,7 @@ final class UserRepository implements UserDataSource {
 
                 setSavedUser(context, getSavedUser(context).withGamesPlayed(gamesPlayed));
 
-                if(updateUserCallback != null) {
+                if (updateUserCallback != null) {
                     updateUserCallback.onDataUpdated(keyCode);
                 }
             }
@@ -126,21 +173,5 @@ final class UserRepository implements UserDataSource {
 
             }
         });
-    }
-
-    private static DatabaseReference getDatabaseReference() {
-        if (sDatabaseReference == null) {
-            sDatabaseReference = FirebaseDatabase.getInstance().getReference().child(USERS);
-        }
-
-        return sDatabaseReference;
-    }
-
-    private static SharedPreferences getSharedPreferences(Context context) {
-        if (sPrefs == null) {
-            sPrefs = PreferenceManager.getDefaultSharedPreferences(context.getApplicationContext());
-        }
-
-        return sPrefs;
     }
 }

@@ -116,9 +116,9 @@ public class GameModel implements GameRepository.OnGameStateChangeListener{
     }
 
     @Override
-    public void onStateChanged(Game.State newState) {
+    public void onGameStateChanged(Game.State newState) {
         for(GameRepository.OnGameStateChangeListener onGameStateChangeListener : mOnGameStateChangeListeners) {
-            onGameStateChangeListener.onStateChanged(newState);
+            onGameStateChangeListener.onGameStateChanged(newState);
         }
     }
 }
