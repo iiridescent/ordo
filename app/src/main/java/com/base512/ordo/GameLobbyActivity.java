@@ -7,14 +7,11 @@ import android.animation.ValueAnimator;
 import android.content.Intent;
 import android.content.res.ColorStateList;
 import android.graphics.Color;
-import android.graphics.Interpolator;
 import android.os.Bundle;
 import android.support.v4.content.ContextCompat;
 import android.view.View;
-import android.view.animation.BounceInterpolator;
 import android.view.animation.CycleInterpolator;
 import android.widget.Button;
-import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -22,8 +19,6 @@ import com.base512.ordo.data.Game;
 import com.base512.ordo.data.source.BaseDataSource;
 import com.base512.ordo.data.source.DataModel;
 import com.base512.ordo.data.source.game.GameRepository;
-
-import java.math.BigInteger;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;

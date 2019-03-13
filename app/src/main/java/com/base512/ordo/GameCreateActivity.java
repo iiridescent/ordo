@@ -12,9 +12,6 @@ import com.base512.ordo.data.source.BaseDataSource;
 import com.base512.ordo.data.source.DataModel;
 import com.base512.ordo.ui.NumberConfigView;
 
-import butterknife.BindView;
-import butterknife.ButterKnife;
-
 /**
  * Configuration screen for creating a new game
  *
@@ -25,13 +22,9 @@ import butterknife.ButterKnife;
  */
 public class GameCreateActivity extends BaseGameActivity {
 
-    @BindView(R.id.gameCreateObjectsField)
     NumberConfigView mGameObjectsField;
-    @BindView(R.id.gameCreateDurationField)
     NumberConfigView mGameDurationField;
-    @BindView(R.id.gameCreateTypeSelector)
     RadioGroup mTypeSelector;
-    @BindView(R.id.gameCreateButton)
     Button mCreateButton;
 
     @Override
@@ -43,7 +36,11 @@ public class GameCreateActivity extends BaseGameActivity {
     }
 
     public void setupViews() {
-        ButterKnife.bind(this);
+        mCreateButton = findViewById(R.id.gameCreateButton);
+        mGameObjectsField = findViewById(R.id.gameCreateObjectsField);
+        mGameDurationField = findViewById(R.id.gameCreateDurationField);
+        mTypeSelector = findViewById(R.id.gameCreateTypeSelector);
+
         mCreateButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {

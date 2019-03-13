@@ -1,7 +1,6 @@
 package com.base512.ordo;
 
 import android.content.Intent;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.EditText;
@@ -11,7 +10,6 @@ import android.widget.Toast;
 import com.base512.ordo.data.source.DataModel;
 import com.base512.ordo.data.User;
 import com.base512.ordo.data.source.BaseDataSource;
-
 import butterknife.BindView;
 import butterknife.ButterKnife;
 

@@ -11,7 +11,6 @@ import com.base512.ordo.data.GameObject;
 import com.base512.ordo.data.UserGameGuesses;
 import com.base512.ordo.data.source.BaseDataSource;
 import com.base512.ordo.data.source.DataModel;
-
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
