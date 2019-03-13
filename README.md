@@ -1,5 +1,5 @@
 # Ordo
 
-Android memory training game
+Memory training game for Android
 
 <!-- add screenshots -->
